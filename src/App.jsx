@@ -223,43 +223,97 @@ export default function FitossanitarioApp() {
   const { calendar, perPlantNeeded } = useMemo(() => generateSchedule({ year, monthIndex, selections }), [year, monthIndex, selections]);
   const { daysInMonth } = monthInfo(year, monthIndex);
 
-  // 🖨️ Função para imprimir só a tabela
+  // 🖨️ Função para imprimir só a tabela - corrigida para não fechar imediatamente
   function printTable() {
     const table = document.getElementById("fitos-table");
     if (!table) return;
-    const newWin = window.open("");
+    const newWin = window.open("", "_blank");
+    if (!newWin) {
+      alert("Não foi possível abrir a janela de impressão. Verifique se o bloqueador de pop-ups está ativo.");
+      return;
+    }
+
+    const monthLabel = new Date(year, monthIndex).toLocaleString("pt-BR", { month: "long", year: "numeric" });
+    const genDate = new Date().toLocaleDateString("pt-BR");
+
     newWin.document.write(`
       <html>
         <head>
-          <title>Calendário Fitossanitário - ${new Date(
-            year,
-            monthIndex
-          ).toLocaleString("pt-BR", { month: "long", year: "numeric" })}</title>
+          <title>Calendário Fitossanitário - ${monthLabel}</title>
+          <meta charset="utf-8" />
           <style>
-            body { margin: 20px; font-family: sans-serif; }
-            h2 { text-align: center; margin-bottom: 20px; }
-            table { border-collapse: collapse; width: 100%; }
-            th, td { border: 1px solid #ccc; padding: 6px; vertical-align: top; }
-            th { background: #f9f9f9; }
+            body { margin: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #111; }
+            h2 { text-align: center; margin-bottom: 12px; font-size: 18px; }
+            .meta { text-align: center; font-size: 12px; color: #555; margin-bottom: 8px; }
+            table { border-collapse: collapse; width: 100%; font-size: 12px; }
+            th, td { border: 1px solid #ccc; padding: 6px; vertical-align: top; text-align: left; }
+            th { background: #f9f9f9; font-weight: 600; }
             ul { margin: 0; padding-left: 18px; }
+            footer { margin-top: 12px; font-size: 11px; color: #444; text-align: right; }
+            @media print {
+              body { margin: 8mm; }
+            }
           </style>
         </head>
         <body>
-          <h2>Calendário Fitossanitário - ${new Date(year, monthIndex).toLocaleString("pt-BR", { month: "long", year: "numeric" })}</h2>
+          <h2>Calendário Fitossanitário — ${monthLabel}</h2>
+          <div class="meta">Gerado em ${genDate}</div>
           ${table.outerHTML}
-          <script>window.print(); window.close();</script>
+          <footer>Gerado por seu sistema</footer>
+
+          <script>
+            // Garante que a impressão só seja chamada após o carregamento completo
+            function tryPrint() {
+              try {
+                window.focus();
+                // Alguns navegadores ignoram onafterprint; chamamos print diretamente no load
+                window.print();
+              } catch (e) {
+                console.warn("Erro ao tentar imprimir:", e);
+              }
+            }
+
+            // Fecha a janela após o término da impressão (quando suportado)
+            function tryClose() {
+              try {
+                window.close();
+              } catch (e) {
+                // nada
+              }
+            }
+
+            window.onload = function() {
+              // chama print na carga – ajuda navegadores que mostram o diálogo imediatamente
+              tryPrint();
+            };
+
+            // onafterprint é o melhor ponto para fechar; fallback com timeout caso não seja suportado
+            if ('onafterprint' in window) {
+              window.onafterprint = tryClose;
+            } else {
+              // fallback: fecha 2s após print ser chamado (ajuste se necessário)
+              window.onfocus = function() {
+                // se o usuário voltar ao popup (após cancelar), fecha
+                setTimeout(tryClose, 2000);
+              };
+            }
+          </script>
         </body>
       </html>
     `);
+
     newWin.document.close();
+    try {
+      newWin.focus();
+    } catch (e) {
+      // Ignore if focus não for permitido
+    }
   }
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <h1 className="text-2xl font-semibold mb-4">Gerador de Calendário Fitossanitário</h1>
-      <p className="text-sm mb-4">
-        Selecione as plantas que você tem e marque as pragas/doenças observadas. O calendário respeita incompatibilidades e garante ao menos 3 dias de separação quando necessário.
-      </p>
+      <p className="text-sm mb-4">Selecione as plantas que você tem e marque as pragas/doenças observadas. O calendário respeita incompatibilidades e garante ao menos 3 dias de separação quando necessário.</p>
 
       <div className="bg-white shadow rounded p-4 mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
