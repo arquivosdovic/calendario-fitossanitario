@@ -223,43 +223,10 @@ export default function FitossanitarioApp() {
   const { calendar, perPlantNeeded } = useMemo(() => generateSchedule({ year, monthIndex, selections }), [year, monthIndex, selections]);
   const { daysInMonth } = monthInfo(year, monthIndex);
 
-  // 🖨️ Função para imprimir só a tabela
-  function printTable() {
-    const table = document.getElementById("fitos-table");
-    if (!table) return;
-    const newWin = window.open("");
-    newWin.document.write(`
-      <html>
-        <head>
-          <title>Calendário Fitossanitário - ${new Date(
-            year,
-            monthIndex
-          ).toLocaleString("pt-BR", { month: "long", year: "numeric" })}</title>
-          <style>
-            body { margin: 20px; font-family: sans-serif; }
-            h2 { text-align: center; margin-bottom: 20px; }
-            table { border-collapse: collapse; width: 100%; }
-            th, td { border: 1px solid #ccc; padding: 6px; vertical-align: top; }
-            th { background: #f9f9f9; }
-            ul { margin: 0; padding-left: 18px; }
-          </style>
-        </head>
-        <body>
-          <h2>Calendário Fitossanitário - ${new Date(year, monthIndex).toLocaleString("pt-BR", { month: "long", year: "numeric" })}</h2>
-          ${table.outerHTML}
-          <script>window.print(); window.close();</script>
-        </body>
-      </html>
-    `);
-    newWin.document.close();
-  }
-
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <h1 className="text-2xl font-semibold mb-4">Gerador de Calendário Fitossanitário</h1>
-      <p className="text-sm mb-4">
-        Selecione as plantas que você tem e marque as pragas/doenças observadas. O calendário respeita incompatibilidades e garante ao menos 3 dias de separação quando necessário.
-      </p>
+      <p className="text-sm mb-4">Selecione as plantas que você tem e marque as pragas/doenças observadas. O calendário respeita incompatibilidades e garante ao menos 3 dias de separação quando necessário.</p>
 
       <div className="bg-white shadow rounded p-4 mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -313,18 +280,8 @@ export default function FitossanitarioApp() {
         </div>
       </div>
 
-      {/* 🖨️ Botão de impressão */}
-      <div className="flex justify-end mb-2">
-        <button
-          onClick={printTable}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow"
-        >
-          🖨️ Imprimir Tabela
-        </button>
-      </div>
-
       <div className="overflow-auto border rounded">
-        <table id="fitos-table" className="min-w-full table-auto">
+        <table className="min-w-full table-auto">
           <thead className="bg-gray-50 sticky top-0">
             <tr>
               <th className="p-2 border">Dia</th>
@@ -347,11 +304,7 @@ export default function FitossanitarioApp() {
                   {PLANTS.map((plant) => (
                     <td key={plant + day} className="p-2 border align-top">
                       {calendar[day] && calendar[day][plant] && calendar[day][plant].length ? (
-                        <ul className="list-disc pl-5 text-sm">
-                          {calendar[day][plant].map((txt, idx) => (
-                            <li key={idx}>{txt}</li>
-                          ))}
-                        </ul>
+                        <ul className="list-disc pl-5 text-sm">{calendar[day][plant].map((txt, idx) => (<li key={idx}>{txt}</li>))}</ul>
                       ) : (
                         <span className="text-gray-400 text-sm">—</span>
                       )}
@@ -367,8 +320,8 @@ export default function FitossanitarioApp() {
       <div className="mt-4 text-sm text-gray-700">
         <p><strong>Observações importantes:</strong></p>
         <ul className="list-disc pl-5">
-          <li>Produtos "curativos" (ex.: Sabão, Alho) só são sugeridos se a praga marcada for uma doença/condição que eles cobrem. Insetos não geram sugestões de curativos-only.</li>
-          <li>Incompatibilidades são respeitadas: produtos declarados como "não aplicar no mesmo dia" não aparecem no mesmo dia para a mesma planta. Se dois produtos incompatíveis forem necessários, o agendador tenta espaçá-los ao menos 3 dias.</li>
+          <li>Produtos \"curativos\" (ex.: Sabão, Alho) só são sugeridos se a praga marcada for uma doença/condição que eles cobrem. Insetos não geram sugestões de curativos-only.</li>
+          <li>Incompatibilidades são respeitadas: produtos declarados como \"não aplicar no mesmo dia\" não aparecem no mesmo dia para a mesma planta. Se dois produtos incompatíveis forem necessários, o agendador tenta espaçá-los ao menos 3 dias.</li>
           <li>O agendamento segue uma heurística gulosa dentro do mês (primeiro dia disponível + repetições pela frequência). Em casos extremos (muito conflito), pode não ser possível encaixar todas as aplicações no mês — revise as pragas selecionadas ou escolha outro mês.</li>
         </ul>
       </div>
