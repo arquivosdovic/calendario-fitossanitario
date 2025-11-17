@@ -12,9 +12,18 @@ const parseLocalDate = (str) => {
   return luxonDt.toJSDate();
 };
 
-// ... (Definições de PLANTS, PESTS, PRODUCTS - mantidas) ...
+// Calendário Fitossanitário - componente React (single-file)
+// Usa Tailwind para estilo
 
-const PLANTS = ['Hortelã', 'Alecrim', 'Tomilho', 'Manjericão', 'Pimenta'];
+const PLANTS = [
+  'Hortelã',
+  'Alecrim',
+  'Tomilho',
+  'Manjericão',
+  'Pimenta',
+  //'Lírios / Mini Phalaenopsis',
+  //'Antúrio',
+];
 
 const SPECIAL_PLANTS = ['Lírios / Mini Phalaenopsis', 'Antúrio'];
 
@@ -185,7 +194,15 @@ const PRODUCTS = [
   {
     id: 'neem',
     nome: 'Neem (Óleo de Nim)',
-    plantas: ['Hortelã', 'Alecrim', 'Tomilho', 'Manjericão', 'Pimenta'],
+    plantas: [
+      'Hortelã',
+      'Alecrim',
+      'Tomilho',
+      'Manjericão',
+      'Pimenta',
+      //'Antúrio',
+      //'Lírios / Mini Phalaenopsis',
+    ],
     seguroPara: {
       Hortelã: true,
       Alecrim: true,
@@ -364,8 +381,6 @@ function generateSchedule({ startDate, endDate, selections }) {
 const WEEKDAYS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
 export default function FitossanitarioApp() {
-  // ... (Estados e funções de toggle - mantidos) ...
-
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [monthIndex, setMonthIndex] = useState(today.getMonth());
@@ -403,7 +418,7 @@ export default function FitossanitarioApp() {
       };
     });
   }
-  // O Luxon no useMemo garante que as datas enviadas ao generateSchedule estão corretas.
+
   const [startDate, setStartDate] = useState(
     new Date(today.getFullYear(), today.getMonth(), today.getDate())
   );
@@ -427,35 +442,251 @@ export default function FitossanitarioApp() {
     });
   }, [startDate, endDate, selections]);
 
-  const { daysInMonth } = monthInfo(year, monthIndex); // 🖨️ Função para imprimir só a tabela - (mantida)
+  const { daysInMonth } = monthInfo(year, monthIndex);
 
+  // 🖨️ Função para imprimir só a tabela - corrigida para não fechar imediatamente
   function printTable() {
-    // ... (Lógica de impressão mantida) ...
+    const table = document.getElementById('fitos-table');
+    if (!table) return;
+    const newWin = window.open('', '_blank');
+    if (!newWin) {
+      alert(
+        'Não foi possível abrir a janela de impressão. Verifique se o bloqueador de pop-ups está ativo.'
+      );
+      return;
+    }
+
+    const monthLabel = new Date(year, monthIndex).toLocaleString('pt-BR', {
+      month: 'long',
+      year: 'numeric',
+    });
+    const genDate = new Date().toLocaleDateString('pt-BR');
+
+    newWin.document.write(`
+      <html>
+        <head>
+          <title>Calendário Fitossanitário - ${monthLabel}</title>
+          <meta charset="utf-8" />
+          <style>
+            body { margin: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #111; }
+            h2 { text-align: center; margin-bottom: 12px; font-size: 18px; }
+            .meta { text-align: center; font-size: 12px; color: #555; margin-bottom: 8px; }
+            table { border-collapse: collapse; width: 100%; font-size: 12px; }
+            th, td { border: 1px solid #ccc; padding: 6px; vertical-align: top; text-align: left; }
+            th { background: #f9f9f9; font-weight: 600; }
+            ul { margin: 0; padding-left: 18px; }
+            footer { margin-top: 12px; font-size: 11px; color: #444; text-align: right; }
+            @media print {
+              body { margin: 8mm; }
+            }
+          </style>
+        </head>
+        <body>
+          <h2>Calendário Fitossanitário — ${monthLabel}</h2>
+          <div class="meta">Gerado em ${genDate}</div>
+          ${table.outerHTML}
+          <footer>Gerado por seu sistema</footer>
+
+          <script>
+            // Garante que a impressão só seja chamada após o carregamento completo
+            function tryPrint() {
+              try {
+                window.focus();
+                // Alguns navegadores ignoram onafterprint; chamamos print diretamente no load
+                window.print();
+              } catch (e) {
+                console.warn("Erro ao tentar imprimir:", e);
+              }
+            }
+
+            // Fecha a janela após o término da impressão (quando suportado)
+            function tryClose() {
+              try {
+                window.close();
+              } catch (e) {
+                // nada
+              }
+            }
+
+            window.onload = function() {
+              // chama print na carga – ajuda navegadores que mostram o diálogo imediatamente
+              tryPrint();
+            };
+
+            // onafterprint é o melhor ponto para fechar; fallback com timeout caso não seja suportado
+            if ('onafterprint' in window) {
+              window.onafterprint = tryClose;
+            } else {
+              // fallback: fecha 2s após print ser chamado (ajuste se necessário)
+              window.onfocus = function() {
+                // se o usuário voltar ao popup (após cancelar), fecha
+                setTimeout(tryClose, 2000);
+              };
+            }
+          </script>
+        </body>
+      </html>
+    `);
+
+    newWin.document.close();
+    try {
+      newWin.focus();
+    } catch (e) {
+      // Ignore if focus não for permitido
+    }
   }
 
   return (
     <div className='p-6 max-w-6xl mx-auto'>
-            {/* ... (Controles de seleção e inputs de data - mantidos) ... */}
-      {/* ... (Resumo de produtos - mantido) ... */}     {' '}
-      {/* 🖨️ Botão de impressão - (mantido) */}     {' '}
+      <h1 className='text-2xl font-semibold mb-4'>
+        Gerador de Calendário Fitossanitário
+      </h1>
+      <p className='text-sm mb-4'>
+        Selecione as plantas que você tem e marque as pragas/doenças observadas.
+        O calendário respeita incompatibilidades e garante ao menos 3 dias de
+        separação quando necessário.
+      </p>
+
+      <div className='bg-white shadow rounded p-4 mb-6 grid grid-cols-1 md:grid-cols-2 gap-4'>
+        <div>
+          <h2 className='font-medium'>Plantas</h2>
+          <div className='space-y-2 mt-2'>
+            {PLANTS.map((plant) => (
+              <div key={plant} className='border rounded p-2'>
+                <label className='inline-flex items-center gap-2'>
+                  <input
+                    type='checkbox'
+                    checked={selections[plant].enabled}
+                    onChange={() => togglePlant(plant)}
+                  />
+                  <span className='font-medium'>{plant}</span>
+                </label>
+                {selections[plant].enabled && (
+                  <div className='mt-2 grid grid-cols-2 gap-2 text-sm'>
+                    {PESTS.map((pest) => (
+                      <label
+                        key={pest}
+                        className='inline-flex items-center gap-2'
+                      >
+                        <input
+                          type='checkbox'
+                          checked={selections[plant].pests.includes(pest)}
+                          onChange={() => togglePest(plant, pest)}
+                        />
+                        <span>{pest}</span>
+                      </label>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <div>
+            <h2 className='font-medium'>Período do Calendário</h2>
+            <div className='flex flex-col gap-2 mt-2'>
+              <label className='flex flex-col'>
+                Data inicial:
+                <input
+                  type='date'
+                  value={`${startDate.getFullYear()}-${(
+                    startDate.getMonth() + 1
+                  ) // Use getMonth() e adicione 1
+                    .toString()
+                    .padStart(2, '0')}-${startDate
+                    .getDate() // Use getDate()
+                    .toString()
+                    .padStart(2, '0')}`}
+                  onChange={(e) => setStartDate(parseLocalDate(e.target.value))}
+                  className='border rounded p-2'
+                />
+              </label>
+              <label className='flex flex-col'>
+                Data final:
+                <input
+                  type='date'
+                  value={`${endDate.getFullYear()}-${(endDate.getMonth() + 1)
+                    .toString()
+                    .padStart(2, '0')}-${endDate
+                    .getDate()
+                    .toString()
+                    .padStart(2, '0')}`}
+                  onChange={(e) => setEndDate(parseLocalDate(e.target.value))}
+                  className='border rounded p-2'
+                />
+              </label>
+            </div>
+          </div>
+
+          <div className='mt-4'>
+            <h3 className='font-medium'>
+              Resumo de produtos sugeridos por planta
+            </h3>
+            <div className='mt-2 text-sm'>
+              {PLANTS.map((plant) => (
+                <div key={plant} className='mb-2'>
+                  <strong>{plant}:</strong>{' '}
+                  {selections[plant].enabled
+                    ? perPlantNeeded[plant] && perPlantNeeded[plant].length
+                      ? perPlantNeeded[plant]
+                          .map((id) => {
+                            const p = PRODUCTS.find((prod) => prod.id === id);
+                            const segur = p.seguroPara[plant]
+                              ? ''
+                              : ' ⚠️ Sensível';
+                            const enx = p.exigeEnxague
+                              ? ` — enxágue após ${p.tempoAcao}`
+                              : '';
+                            return `${p.nome}${segur}${enx}`;
+                          })
+                          .join(', ')
+                      : 'Nenhum produto necessário com base nas pragas marcadas'
+                    : 'Não selecionada'}
+                </div>
+              ))}
+
+              {/* 3. **ALTERAÇÃO:** Adição do aviso no fim do resumo */}
+              <div className='mt-3 p-2 bg-yellow-100 border border-yellow-300 rounded text-xs'>
+                <p className='font-bold text-yellow-800'>
+                  ⚠️ Aviso importante para Lírios / Mini Phalaenopsis e Antúrio:
+                </p>
+                <p className='text-yellow-700'>
+                  Para essas espécies, é **fortemente recomendado preferir
+                  métodos físicos/mecânicos** de controle de pragas, como
+                  remoção manual dos insetos (com pano, algodão e cotonete
+                  úmidos, por exemplo), lavagem das folhas e o uso de armadilhas
+                  adesivas para insetos voadores.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 🖨️ Botão de impressão */}
+      <div className='flex justify-end mb-2'>
+        <button
+          onClick={printTable}
+          className='bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow'
+        >
+          🖨️ Imprimir Tabela
+        </button>
+      </div>
+
       <div className='overflow-auto border rounded'>
-               {' '}
         <table id='fitos-table' className='min-w-full table-auto'>
-                   {' '}
           <thead className='bg-gray-50 sticky top-0'>
-                       {' '}
             <tr>
-                            <th className='p-2 border'>Dia</th>             {' '}
+              <th className='p-2 border'>Dia</th>
               {PLANTS.map((plant) => (
                 <th key={plant} className='p-2 border text-left'>
-                                    {plant}               {' '}
+                  {plant}
                 </th>
               ))}
-                         {' '}
             </tr>
-                     {' '}
           </thead>
-                   {' '}
           <tbody>
                        {' '}
             {Object.keys(calendar).map((dayKey) => {
@@ -499,11 +730,117 @@ export default function FitossanitarioApp() {
             })}
                      {' '}
           </tbody>
-                 {' '}
         </table>
-             {' '}
       </div>
-            {/* ... (Observações e detalhes de produtos - mantidos) ... */}   {' '}
+
+      <div className='mt-4 text-sm text-gray-700'>
+        <p>
+          <strong>Observações importantes:</strong>
+        </p>
+        <ul className='list-disc pl-5'>
+          <li>
+            Produtos "curativos" (ex.: Sabão, Alho) só são sugeridos se a praga
+            marcada for uma doença/condição que eles cobrem. Insetos não geram
+            sugestões de curativos-only.
+          </li>
+          <li>
+            Incompatibilidades são respeitadas: produtos declarados como "não
+            aplicar no mesmo dia" não aparecem no mesmo dia para a mesma planta.
+            Se dois produtos incompatíveis forem necessários, o agendador tenta
+            espaçá-los ao menos 3 dias.
+          </li>
+          <li>
+            O agendamento segue uma heurística gulosa dentro do mês (primeiro
+            dia disponível + repetições pela frequência). Em casos extremos
+            (muito conflito), pode não ser possível encaixar todas as aplicações
+            no mês — revise as pragas selecionadas ou escolha outro mês.
+          </li>
+        </ul>
+      </div>
+
+      <div className='mt-6 text-sm'>
+        <h3 className='font-medium'>Produtos e detalhes</h3>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-2 mt-2 text-sm'>
+          {PRODUCTS.map((p) => (
+            <div key={p.id} className='border rounded p-2'>
+              <strong>{p.nome}</strong>
+              <div className='text-xs'>Tipo: {p.tipo}</div>
+              <div className='text-xs'>Freq.: {p.frequenciaDiasexib}</div>
+              <div className='text-xs'>Controla: {p.controla.join(', ')}</div>
+              <div className='text-xs'>
+                Segurança por planta:
+                <ul className='list-disc pl-4'>
+                  {PLANTS.map((plant) => (
+                    <li key={plant}>
+                      {plant}:{' '}
+                      {p.seguroPara && p.seguroPara[plant]
+                        ? '✅ Seguro'
+                        : '⚠️ Sensível'}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {p.exigeEnxague && p.tempoAcao && (
+                <div className='text-xs'>
+                  Enxágue necessário após: {p.tempoAcao}
+                </div>
+              )}
+              {p.nota && <div className='text-xs italic'>Dica: {p.nota}</div>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className='mt-6 text-sm'>
+        <h3 className='font-medium'>Receitas e instruções de aplicação</h3>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-2'>
+          {PRODUCTS.map((p) => (
+            <div key={p.id} className='border rounded p-3'>
+              <strong>{p.nome}</strong>
+
+              {p.receita && (
+                <div className='mt-2 text-xs'>
+                  <div>
+                    <strong>Ingredientes:</strong>
+                  </div>
+                  <ul className='list-disc pl-5'>
+                    {p.receita.ingredientes.map((ing, idx) => (
+                      <li key={idx}>{ing}</li>
+                    ))}
+                  </ul>
+
+                  <div className='mt-1'>
+                    <strong>Preparo:</strong>
+                  </div>
+                  <ul className='list-disc pl-5'>
+                    {p.receita.preparo.map((step, idx) => (
+                      <li key={idx}>{step}</li>
+                    ))}
+                  </ul>
+
+                  <div className='mt-1'>
+                    <strong>Aplicação:</strong>
+                  </div>
+                  <ul className='list-disc pl-5'>
+                    {p.receita.aplicacao.map((step, idx) => (
+                      <li key={idx}>{step}</li>
+                    ))}
+                  </ul>
+
+                  <div className='mt-1'>
+                    <strong>Necessita enxágue:</strong> {p.receita.tempoEnxague}
+                  </div>
+                  {p.receita.nota && (
+                    <div className='mt-1 text-gray-600'>
+                      <em>{p.receita.nota}</em>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
