@@ -329,7 +329,11 @@ function generateSchedule({ startDate, endDate, selections }) {
   for (let i = 0; i < totalDays; i++) {
     const current = new Date(startDate);
     current.setDate(current.getDate() + i);
-    const dayKey = current.toISOString().split('T')[0];
+    const pad = (n) => (n < 10 ? '0' + n : n);
+    const dayKey = `${current.getFullYear()}-${pad(
+      current.getMonth() + 1
+    )}-${pad(current.getDate())}`;
+
     calendar[dayKey] = {};
     for (const p of PLANTS) calendar[dayKey][p] = [];
   }
@@ -338,7 +342,11 @@ function generateSchedule({ startDate, endDate, selections }) {
     for (const item of scheduleByPlant[plant]) {
       const current = new Date(startDate);
       current.setDate(current.getDate() + item.dayOffset);
-      const dayKey = current.toISOString().split('T')[0];
+      const pad = (n) => (n < 10 ? '0' + n : n);
+      const dayKey = `${current.getFullYear()}-${pad(
+        current.getMonth() + 1
+      )}-${pad(current.getDate())}`;
+
       const prod = PRODUCTS.find((p) => p.id === item.id);
       if (!prod) continue;
       calendar[dayKey][plant].push(
@@ -552,7 +560,14 @@ export default function FitossanitarioApp() {
                 Data inicial:
                 <input
                   type='date'
-                  value={startDate.toISOString().slice(0, 10)}
+                  value={`${startDate.getFullYear()}-${(
+                    startDate.getMonth() + 1
+                  )
+                    .toString()
+                    .padStart(2, '0')}-${startDate
+                    .getDate()
+                    .toString()
+                    .padStart(2, '0')}`}
                   onChange={(e) => {
                     const [y, m, d] = e.target.value.split('-').map(Number);
                     setStartDate(new Date(y, m - 1, d, 12, 0, 0)); // meio-dia
@@ -564,7 +579,14 @@ export default function FitossanitarioApp() {
                 Data final:
                 <input
                   type='date'
-                  value={endDate.toISOString().slice(0, 10)}
+                  value={`${startDate.getFullYear()}-${(
+                    startDate.getMonth() + 1
+                  )
+                    .toString()
+                    .padStart(2, '0')}-${startDate
+                    .getDate()
+                    .toString()
+                    .padStart(2, '0')}`}
                   onChange={(e) => {
                     const [y, m, d] = e.target.value.split('-').map(Number);
                     setEndDate(new Date(y, m - 1, d, 12, 0, 0)); // meio-dia
