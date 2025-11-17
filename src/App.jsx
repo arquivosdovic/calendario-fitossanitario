@@ -621,8 +621,8 @@ export default function FitossanitarioApp() {
       </div>
 
       <div className='mt-6 text-sm'>
-        <h3 className='font-medium'>Legenda rápida dos produtos</h3>
-        <div className='grid grid-cols-2 gap-2 mt-2 text-sm'>
+        <h3 className='font-medium'>Produtos e detalhes</h3>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-2 mt-2 text-sm'>
           {PRODUCTS.map((p) => (
             <div key={p.id} className='border rounded p-2'>
               <strong>{p.nome}</strong>
@@ -631,6 +631,25 @@ export default function FitossanitarioApp() {
                 Freq.: a cada {p.frequenciaDias} dias
               </div>
               <div className='text-xs'>Controla: {p.controla.join(', ')}</div>
+              <div className='text-xs'>
+                Segurança por planta:
+                <ul className='list-disc pl-4'>
+                  {PLANTS.map((plant) => (
+                    <li key={plant}>
+                      {plant}:{' '}
+                      {p.seguroPara && p.seguroPara[plant]
+                        ? '✅ Seguro'
+                        : '⚠️ Sensível'}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {p.exigeEnxague && p.tempoAcao && (
+                <div className='text-xs'>
+                  Enxágue necessário após: {p.tempoAcao}
+                </div>
+              )}
+              {p.nota && <div className='text-xs italic'>Dica: {p.nota}</div>}
             </div>
           ))}
         </div>
