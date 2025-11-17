@@ -2,7 +2,10 @@ import React, { useState, useMemo } from 'react';
 
 const parseLocalDate = (str) => {
   const [y, m, d] = str.split('-').map(Number);
-  return new Date(y, m - 1, d); // mês é 0-indexado
+  const date = new Date();
+  date.setFullYear(y, m - 1, d);
+  date.setHours(0, 0, 0, 0); // zera horas, minutos, segundos e ms
+  return date;
 };
 
 // Calendário Fitossanitário - componente React (single-file)
@@ -565,30 +568,16 @@ export default function FitossanitarioApp() {
                 Data inicial:
                 <input
                   type='date'
-                  value={`${startDate.getFullYear()}-${(
-                    startDate.getMonth() + 1
-                  )
-                    .toString()
-                    .padStart(2, '0')}-${startDate
-                    .getDate()
-                    .toString()
-                    .padStart(2, '0')}`}
+                  value={startDate.toISOString().slice(0, 10)}
                   onChange={(e) => setStartDate(parseLocalDate(e.target.value))}
-                  className='border rounded p-2'
                 />
               </label>
               <label className='flex flex-col'>
                 Data final:
                 <input
                   type='date'
-                  value={`${endDate.getFullYear()}-${(endDate.getMonth() + 1)
-                    .toString()
-                    .padStart(2, '0')}-${endDate
-                    .getDate()
-                    .toString()
-                    .padStart(2, '0')}`}
+                  value={endDate.toISOString().slice(0, 10)}
                   onChange={(e) => setEndDate(parseLocalDate(e.target.value))}
-                  className='border rounded p-2'
                 />
               </label>
             </div>
