@@ -756,15 +756,14 @@ export default function FitossanitarioApp() {
                 <em>Freqência:</em> a cada {p.frequenciaDias} dias
               </div>
               <div className='text-xs mt-1'>
-                <em>Controla:</em> {p.controla.join(', ')}
-              </div>
-              <div className='text-xs mt-1'>
-                <em>Segurança por planta:</em>{' '}
-                {Object.entries(p.seguroPara)
-                  .map(
-                    ([pl, seguro]) => `${pl}: ${seguro ? 'Seguro' : 'Evitar'}`
-                  )
-                  .join('; ')}
+                <em>Segurança por planta:</em>
+                <ul className='list-disc pl-5'>
+                  {Object.entries(p.seguroPara).map(([pl, seguro]) => (
+                    <li key={pl}>
+                      {pl}: {seguro ? '✅ Seguro' : '⚠️ Sensível'}
+                    </li>
+                  ))}
+                </ul>
               </div>
 
               {p.receita && (
