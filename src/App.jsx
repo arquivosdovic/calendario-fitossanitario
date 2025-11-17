@@ -780,9 +780,6 @@ export default function FitossanitarioApp() {
                   </ul>
 
                   <div className='mt-1'>
-                    <strong>Tempo de ação:</strong> {p.receita.tempoAcao}
-                  </div>
-                  <div className='mt-1'>
                     <strong>Necessita enxágue:</strong> {p.receita.tempoEnxague}
                   </div>
                   {p.receita.nota && (
