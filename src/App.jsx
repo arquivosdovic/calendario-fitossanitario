@@ -1,10 +1,15 @@
 import React, { useState, useMemo } from 'react';
+import { DateTime } from 'luxon';
+
+
+const TARGET_TIMEZONE = 'America/Sao_Paulo';
 
 const parseLocalDate = (str) => {
-  // Cria a data diretamente a partir da string no fuso local,
-  // garantindo que ela seja lida como o início do dia local
-  // '2025-11-17' -> 2025-11-17T00:00:00-03:00 (no fuso local)
-  return new Date(str + 'T00:00:00');
+  // 1. Usa DateTime.fromISO para ler a string 'YYYY-MM-DD'
+  // 2. Define o fuso horário de origem como 'local' (GMT-3)
+  // 3. Define o horário para 'startOf("day")' para garantir 00:00:00
+  
+  return DateTime.fromISO(str, { zone: TARGET_TIMEZONE }).startOf('day').toJSDate();
 };
 
 // Calendário Fitossanitário - componente React (single-file)
