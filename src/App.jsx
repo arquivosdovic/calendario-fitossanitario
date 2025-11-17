@@ -16,9 +16,11 @@ const PLANTS = [
   'Tomilho',
   'Manjericão',
   'Pimenta',
-  'Lírios / Mini Phalaenopsis',
-  'Antúrio',
+  //'Lírios / Mini Phalaenopsis',
+  //'Antúrio',
 ];
+
+const SPECIAL_PLANTS = ['Lírios / Mini Phalaenopsis', 'Antúrio'];
 
 const PESTS = [
   'Pulgões',
@@ -42,7 +44,8 @@ const PRODUCTS = [
       Manjericão: false,
       Pimenta: true,
     },
-    frequenciaDias: 10,
+    frequenciaDias: 4,
+    frequenciaDiasexib: '4 a 7 dias durante o combate; 7 a 10 como manutenção.',
     incompativeis: ['neem'],
     controla: ['Pulgões', 'Cochonilhas', 'Ácaros'],
     tipo: 'Curativa',
@@ -55,7 +58,8 @@ const PRODUCTS = [
         'Remova cochonilhas grandes com algodão embebido em álcool.',
       ],
       tempoAcao: '3-4 dias entre aplicações até controle',
-      tempoEnxague: 'Sim. Após 3 horas',
+      tempoEnxague:
+        'Sim. Se a planta for sensível, em 40-60 min. Se for resistente, em 2-3h ou não enxaguar.',
       nota: 'Pode queimar plantas sensíveis como manjericão e hortelã.',
     },
   },
@@ -71,6 +75,7 @@ const PRODUCTS = [
       Pimenta: true,
     },
     frequenciaDias: 14,
+    frequenciaDiasexib: 'A cada 14 dias.',
     incompativeis: ['leite', 'enxofre'],
     controla: ['Oídio', 'Míldio', 'Fungos foliares'],
     tipo: 'Preventiva',
@@ -103,6 +108,7 @@ const PRODUCTS = [
       Pimenta: true,
     },
     frequenciaDias: 14,
+    frequenciaDiasexib: 'A cada 14 dias.',
     incompativeis: ['bicarbonato', 'enxofre'],
     controla: ['Oídio', 'Fungos foliares'],
     tipo: 'Preventiva / Curativa leve',
@@ -127,6 +133,7 @@ const PRODUCTS = [
       Pimenta: true,
     },
     frequenciaDias: 14,
+    frequenciaDiasexib: 'De 10 a 14 dias.',
     incompativeis: ['neem', 'sabao', 'leite'],
     controla: ['Oídio', 'Fungos foliares', 'Ácaros'],
     tipo: 'Preventiva e Curativa',
@@ -155,6 +162,8 @@ const PRODUCTS = [
       Pimenta: true,
     },
     frequenciaDias: 14,
+    frequenciaDiasexib:
+      'Entre 1 a 2 semanas, ou conforme a aparição de pragas.',
     incompativeis: ['neem', 'enxofre'],
     controla: ['Pulgões', 'Cochonilhas', 'Moscas-brancas'],
     tipo: 'Curativa leve',
@@ -186,8 +195,8 @@ const PRODUCTS = [
       'Tomilho',
       'Manjericão',
       'Pimenta',
-      'Antúrio',
-      'Lírios / Mini Phalaenopsis',
+      //'Antúrio',
+      //'Lírios / Mini Phalaenopsis',
     ],
     seguroPara: {
       Hortelã: true,
@@ -199,6 +208,7 @@ const PRODUCTS = [
       'Lírios / Mini Phalaenopsis': true,
     },
     frequenciaDias: 7,
+    frequenciaDiasexib: 'Entre 1 e 2 semanas, conforme necessidade.',
     incompativeis: ['enxofre', 'sabao', 'alho'],
     controla: ['Pulgões', 'Cochonilhas', 'Ácaros', 'Moscas-brancas'],
     tipo: 'Preventiva e Curativa',
@@ -627,6 +637,20 @@ export default function FitossanitarioApp() {
                     : 'Não selecionada'}
                 </div>
               ))}
+
+              {/* 3. **ALTERAÇÃO:** Adição do aviso no fim do resumo */}
+              <div className='mt-3 p-2 bg-yellow-100 border border-yellow-300 rounded text-xs'>
+                <p className='font-bold text-yellow-800'>
+                  ⚠️ Aviso importante para Lírios / Mini Phalaenopsis e Antúrio:
+                </p>
+                <p className='text-yellow-700'>
+                  Para essas espécies, é **fortemente recomendado preferir
+                  métodos físicos/mecânicos** de controle de pragas, como
+                  remoção manual dos insetos (com pano, algodão e cotonete
+                  úmidos, por exemplo), lavagem das folhas e o uso de armadilhas
+                  adesivas para insetos voadores.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -715,9 +739,7 @@ export default function FitossanitarioApp() {
             <div key={p.id} className='border rounded p-2'>
               <strong>{p.nome}</strong>
               <div className='text-xs'>Tipo: {p.tipo}</div>
-              <div className='text-xs'>
-                Freq.: a cada {p.frequenciaDias} dias
-              </div>
+              <div className='text-xs'>Freq.: {p.frequenciaDiasexib}</div>
               <div className='text-xs'>Controla: {p.controla.join(', ')}</div>
               <div className='text-xs'>
                 Segurança por planta:
