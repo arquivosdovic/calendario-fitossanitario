@@ -8,6 +8,7 @@ const PLANTS = [
   "Alecrim",
   "Tomilho",
   "Pimenta",
+  "Manjericão",
   "Lírios / Mini Phalaenopsis",
   "Antúrio",
 ];
@@ -26,56 +27,122 @@ const PRODUCTS = [
   {
     id: "sabao",
     nome: "Sabão",
-    plantas: ["Hortelã", "Alecrim", "Tomilho", "Pimenta", "Lírios / Mini Phalaenopsis", "Antúrio"],
+    plantas: ["Hortelã", "Alecrim", "Tomilho", "Pimenta", "Lírios / Mini Phalaenopsis", "Antúrio", "Manjericão"],
     frequenciaDias: 10,
     incompativeis: ["neem"],
     controla: ["Pulgões", "Cochonilhas", "Ácaros"],
     tipo: "Curativa",
+    seguranca: {
+      "Hortelã": "cuidado",
+      "Alecrim": "safe",
+      "Tomilho": "safe",
+      "Pimenta": "safe",
+      "Manjericão": "cuidado",
+      "Lírios / Mini Phalaenopsis": "cuidado",
+      "Antúrio": "cuidado",
+    },
+    enxague: { necessario: true, tempoMinutos: 30 },
+    instrucao: "Aplicar diretamente sobre os insetos; lavar após 30 min para evitar queimadura nas folhas delicadas."
   },
   {
     id: "bicarbonato",
     nome: "Bicarbonato",
-    plantas: ["Hortelã", "Tomilho", "Alecrim", "Pimenta", "Lírios / Mini Phalaenopsis"],
+    plantas: ["Hortelã", "Tomilho", "Alecrim", "Pimenta", "Lírios / Mini Phalaenopsis", "Manjericão"],
     frequenciaDias: 14,
     incompativeis: ["leite", "enxofre"],
     controla: ["Oídio", "Míldio", "Fungos foliares"],
     tipo: "Preventiva",
+    seguranca: {
+      "Hortelã": "safe",
+      "Alecrim": "safe",
+      "Tomilho": "safe",
+      "Pimenta": "safe",
+      "Manjericão": "safe",
+      "Lírios / Mini Phalaenopsis": "cuidado",
+      "Antúrio": "safe",
+    },
+    enxague: { necessario: false, tempoMinutos: 0 },
+    instrucao: "Misture bicarbonato, água, óleo e detergente; borrife folhas afetadas 1x/semana, fim da tarde."
   },
   {
     id: "leite",
     nome: "Leite",
-    plantas: ["Hortelã", "Tomilho", "Alecrim", "Pimenta", "Lírios / Mini Phalaenopsis"],
+    plantas: ["Hortelã", "Tomilho", "Alecrim", "Pimenta", "Lírios / Mini Phalaenopsis", "Manjericão", "Antúrio"],
     frequenciaDias: 14,
     incompativeis: ["bicarbonato", "enxofre"],
     controla: ["Oídio", "Fungos foliares"],
     tipo: "Preventiva / Curativa leve",
+    seguranca: {
+      "Hortelã": "safe",
+      "Alecrim": "safe",
+      "Tomilho": "safe",
+      "Pimenta": "safe",
+      "Manjericão": "safe",
+      "Lírios / Mini Phalaenopsis": "cuidado",
+      "Antúrio": "safe",
+    },
+    enxague: { necessario: false, tempoMinutos: 0 },
+    instrucao: "Diluir leite em água (1:2); aplicar 2x/semana nas folhas afetadas."
   },
   {
     id: "enxofre",
     nome: "Enxofre",
-    plantas: ["Alecrim", "Hortelã", "Tomilho", "Pimenta", "Lírios / Mini Phalaenopsis"],
+    plantas: ["Alecrim", "Hortelã", "Tomilho", "Pimenta"],
     frequenciaDias: 14,
     incompativeis: ["neem", "sabao", "leite"],
     controla: ["Oídio", "Fungos foliares", "Ácaros"],
     tipo: "Preventiva e Curativa",
+    seguranca: {
+      "Hortelã": "safe",
+      "Alecrim": "safe",
+      "Tomilho": "safe",
+      "Pimenta": "safe",
+      "Manjericão": "não usar",
+      "Lírios / Mini Phalaenopsis": "não usar",
+      "Antúrio": "não usar",
+    },
+    enxague: { necessario: false, tempoMinutos: 0 },
+    instrucao: "Aplicar em horários frescos, manhã cedo ou fim de tarde; prevenir 1x/10-14 dias, curativo 1x/semana."
   },
   {
     id: "alho",
     nome: "Alho",
-    plantas: ["Hortelã", "Alecrim", "Tomilho", "Pimenta"],
+    plantas: ["Hortelã", "Alecrim", "Tomilho", "Pimenta", "Manjericão"],
     frequenciaDias: 14,
     incompativeis: ["neem", "enxofre"],
     controla: ["Pulgões", "Cochonilhas", "Moscas-brancas"],
     tipo: "Curativa leve",
+    seguranca: {
+      "Hortelã": "safe",
+      "Alecrim": "safe",
+      "Tomilho": "safe",
+      "Pimenta": "safe",
+      "Manjericão": "safe",
+      "Lírios / Mini Phalaenopsis": "não usar",
+      "Antúrio": "safe",
+    },
+    enxague: { necessario: false, tempoMinutos: 0 },
+    instrucao: "Deixe o dente de alho em água 2-3h; borrifar folhas (principalmente embaixo), 1x/semana."
   },
   {
     id: "neem",
     nome: "Neem (Óleo de Nim)",
-    plantas: ["Hortelã", "Alecrim", "Tomilho", "Pimenta", "Antúrio", "Lírios / Mini Phalaenopsis"],
+    plantas: ["Hortelã", "Alecrim", "Tomilho", "Pimenta", "Antúrio", "Lírios / Mini Phalaenopsis", "Manjericão"],
     frequenciaDias: 7,
     incompativeis: ["enxofre", "sabao", "alho"],
     controla: ["Pulgões", "Cochonilhas", "Ácaros", "Moscas-brancas"],
     tipo: "Preventiva e Curativa",
+    seguranca: {
+      "Hortelã": "safe",
+      "Alecrim": "safe",
+      "Tomilho": "safe",
+      "Pimenta": "safe",
+      "Manjericão": "safe",
+      "Lírios / Mini Phalaenopsis": "safe",
+      "Antúrio": "safe",
+    },
+    enxague: { necessario: false, tempoMinutos: 0 },
+    instrucao: "Misture óleo de neem e detergente em água morna; borrife todas as partes 1x/semana."
   },
 ];
 
@@ -107,6 +174,7 @@ function generateSchedule({ year, monthIndex, selections }) {
       for (const prod of PRODUCTS) {
         if (!prod.plantas.includes(plant)) continue;
         if (!prod.controla.includes(pest)) continue;
+        if (prod.seguranca[plant] === "não usar") continue;
         if (isOnlyCurative(prod) && !isDisease(pest)) continue;
         needed.add(prod.id);
       }
@@ -148,9 +216,7 @@ function generateSchedule({ year, monthIndex, selections }) {
         day++;
       }
 
-      if (day > daysInMonth) {
-        continue;
-      }
+      if (day > daysInMonth) continue;
 
       for (let d = day; d <= daysInMonth; d += prod.frequenciaDias) {
         const conflictSameDay = placed.some(
@@ -223,7 +289,6 @@ export default function FitossanitarioApp() {
   const { calendar, perPlantNeeded } = useMemo(() => generateSchedule({ year, monthIndex, selections }), [year, monthIndex, selections]);
   const { daysInMonth } = monthInfo(year, monthIndex);
 
-  // 🖨️ Função para imprimir só a tabela - corrigida para não fechar imediatamente
   function printTable() {
     const table = document.getElementById("fitos-table");
     if (!table) return;
@@ -250,9 +315,7 @@ export default function FitossanitarioApp() {
             th { background: #f9f9f9; font-weight: 600; }
             ul { margin: 0; padding-left: 18px; }
             footer { margin-top: 12px; font-size: 11px; color: #444; text-align: right; }
-            @media print {
-              body { margin: 8mm; }
-            }
+            @media print { body { margin: 8mm; } }
           </style>
         </head>
         <body>
@@ -260,60 +323,18 @@ export default function FitossanitarioApp() {
           <div class="meta">Gerado em ${genDate}</div>
           ${table.outerHTML}
           <footer>Gerado por seu sistema</footer>
-
-          <script>
-            // Garante que a impressão só seja chamada após o carregamento completo
-            function tryPrint() {
-              try {
-                window.focus();
-                // Alguns navegadores ignoram onafterprint; chamamos print diretamente no load
-                window.print();
-              } catch (e) {
-                console.warn("Erro ao tentar imprimir:", e);
-              }
-            }
-
-            // Fecha a janela após o término da impressão (quando suportado)
-            function tryClose() {
-              try {
-                window.close();
-              } catch (e) {
-                // nada
-              }
-            }
-
-            window.onload = function() {
-              // chama print na carga – ajuda navegadores que mostram o diálogo imediatamente
-              tryPrint();
-            };
-
-            // onafterprint é o melhor ponto para fechar; fallback com timeout caso não seja suportado
-            if ('onafterprint' in window) {
-              window.onafterprint = tryClose;
-            } else {
-              // fallback: fecha 2s após print ser chamado (ajuste se necessário)
-              window.onfocus = function() {
-                // se o usuário voltar ao popup (após cancelar), fecha
-                setTimeout(tryClose, 2000);
-              };
-            }
-          </script>
         </body>
       </html>
     `);
 
     newWin.document.close();
-    try {
-      newWin.focus();
-    } catch (e) {
-      // Ignore if focus não for permitido
-    }
+    try { newWin.focus(); } catch (e) {}
   }
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <h1 className="text-2xl font-semibold mb-4">Gerador de Calendário Fitossanitário</h1>
-      <p className="text-sm mb-4">Selecione as plantas que você tem e marque as pragas/doenças observadas. O calendário respeita incompatibilidades e garante ao menos 3 dias de separação quando necessário.</p>
+      <p className="text-sm mb-4">Selecione as plantas que você tem e marque as pragas/doenças observadas. O calendário respeita incompatibilidades e indica segurança de cada produto.</p>
 
       <div className="bg-white shadow rounded p-4 mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
@@ -345,9 +366,7 @@ export default function FitossanitarioApp() {
           <div className="flex gap-2 items-center mt-2">
             <select value={monthIndex} onChange={(e) => setMonthIndex(parseInt(e.target.value))} className="border rounded p-2">
               {Array.from({ length: 12 }).map((_, i) => (
-                <option value={i} key={i}>
-                  {new Date(year, i, 1).toLocaleString("pt-BR", { month: "long" })}
-                </option>
+                <option value={i} key={i}>{new Date(year, i, 1).toLocaleString("pt-BR", { month: "long" })}</option>
               ))}
             </select>
             <input type="number" value={year} onChange={(e) => setYear(parseInt(e.target.value) || year)} className="border rounded p-2 w-28" />
@@ -359,7 +378,10 @@ export default function FitossanitarioApp() {
               {PLANTS.map((plant) => (
                 <div key={plant} className="mb-2">
                   <strong>{plant}:</strong>{" "}
-                  {selections[plant].enabled ? (perPlantNeeded[plant] && perPlantNeeded[plant].length ? perPlantNeeded[plant].map((id) => PRODUCTS.find((p) => p.id === id).nome).join(", ") : "Nenhum produto necessário com base nas pragas marcadas") : "Não selecionada"}
+                  {selections[plant].enabled ? (perPlantNeeded[plant] && perPlantNeeded[plant].length ? perPlantNeeded[plant].map((id) => {
+                    const prod = PRODUCTS.find(p => p.id === id);
+                    return `${prod.nome} (${prod.tipo}, Segurança: ${prod.seguranca[plant]}, ${prod.enxague.necessario ? `Enxaguar após ${prod.enxague.tempoMinutos} min` : 'Sem enxágue'})`;
+                  }).join(", ") : "Nenhum produto sugerido") : "Não selecionada"}
                 </div>
               ))}
             </div>
@@ -367,48 +389,25 @@ export default function FitossanitarioApp() {
         </div>
       </div>
 
-      {/* 🖨️ Botão de impressão */}
-      <div className="flex justify-end mb-2">
-        <button
-          onClick={printTable}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow"
-        >
-          🖨️ Imprimir Tabela
-        </button>
-      </div>
-
-      <div className="overflow-auto border rounded">
-        <table id="fitos-table" className="min-w-full table-auto">
-          <thead className="bg-gray-50 sticky top-0">
+      <div className="overflow-x-auto mb-4">
+        <table id="fitos-table" className="table-auto w-full border border-gray-300">
+          <thead>
             <tr>
-              <th className="p-2 border">Dia</th>
-              {PLANTS.map((plant) => (
-                <th key={plant} className="p-2 border text-left">
-                  {plant}
-                </th>
-              ))}
+              <th>DIA</th>
+              {PLANTS.map((p) => <th key={p}>{p}</th>)}
             </tr>
           </thead>
           <tbody>
             {Array.from({ length: daysInMonth }).map((_, i) => {
               const day = i + 1;
-              const weekday = new Date(year, monthIndex, day).getDay();
               return (
-                <tr key={day} className="hover:bg-gray-50">
-                  <td className="p-2 border align-top" style={{ width: 120 }}>
-                    {day} — {WEEKDAYS[weekday]}
-                  </td>
-                  {PLANTS.map((plant) => (
-                    <td key={plant + day} className="p-2 border align-top">
-                      {calendar[day] && calendar[day][plant] && calendar[day][plant].length ? (
-                        <ul className="list-disc pl-5 text-sm">
-                          {calendar[day][plant].map((txt, idx) => (
-                            <li key={idx}>{txt}</li>
-                          ))}
-                        </ul>
-                      ) : (
-                        <span className="text-gray-400 text-sm">—</span>
-                      )}
+                <tr key={day}>
+                  <td className="font-medium text-center">{day}</td>
+                  {PLANTS.map((p) => (
+                    <td key={p}>
+                      <ul className="list-disc ml-4 text-xs">
+                        {calendar[day][p].map((prod, idx) => <li key={idx}>{prod}</li>)}
+                      </ul>
                     </td>
                   ))}
                 </tr>
@@ -418,28 +417,26 @@ export default function FitossanitarioApp() {
         </table>
       </div>
 
-      <div className="mt-4 text-sm text-gray-700">
-        <p><strong>Observações importantes:</strong></p>
-        <ul className="list-disc pl-5">
-          <li>Produtos "curativos" (ex.: Sabão, Alho) só são sugeridos se a praga marcada for uma doença/condição que eles cobrem. Insetos não geram sugestões de curativos-only.</li>
-          <li>Incompatibilidades são respeitadas: produtos declarados como "não aplicar no mesmo dia" não aparecem no mesmo dia para a mesma planta. Se dois produtos incompatíveis forem necessários, o agendador tenta espaçá-los ao menos 3 dias.</li>
-          <li>O agendamento segue uma heurística gulosa dentro do mês (primeiro dia disponível + repetições pela frequência). Em casos extremos (muito conflito), pode não ser possível encaixar todas as aplicações no mês — revise as pragas selecionadas ou escolha outro mês.</li>
+      <div className="mb-4">
+        <h3 className="font-medium mb-1">Legenda detalhada</h3>
+        <ul className="text-sm list-disc ml-6">
+          {PRODUCTS.map((prod) => (
+            <li key={prod.id}>
+              <strong>{prod.nome}</strong> — {prod.tipo}, Frequência: {prod.frequenciaDias} dias.<br />
+              Segurança por planta:
+              <ul className="list-disc ml-6">
+                {PLANTS.map(p => (
+                  <li key={p}>{p}: {prod.seguranca[p]}</li>
+                ))}
+              </ul>
+              {prod.enxague.necessario ? `Enxaguar após ${prod.enxague.tempoMinutos} minutos.` : "Não requer enxágue."}<br />
+              Instruções: {prod.instrucao}
+            </li>
+          ))}
         </ul>
       </div>
 
-      <div className="mt-6 text-sm">
-        <h3 className="font-medium">Legenda rápida dos produtos</h3>
-        <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
-          {PRODUCTS.map((p) => (
-            <div key={p.id} className="border rounded p-2">
-              <strong>{p.nome}</strong>
-              <div className="text-xs">Tipo: {p.tipo}</div>
-              <div className="text-xs">Freq.: a cada {p.frequenciaDias} dias</div>
-              <div className="text-xs">Controla: {p.controla.join(", ")}</div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <button onClick={printTable} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Imprimir calendário</button>
     </div>
   );
 }
