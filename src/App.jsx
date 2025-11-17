@@ -1,5 +1,10 @@
 import React, { useState, useMemo } from 'react';
 
+const parseLocalDate = (str) => {
+  const [y, m, d] = str.split('-').map(Number);
+  return new Date(y, m - 1, d); // mês é 0-indexado
+};
+
 // Calendário Fitossanitário - componente React (single-file)
 // Usa Tailwind para estilo
 
@@ -568,10 +573,7 @@ export default function FitossanitarioApp() {
                     .getDate()
                     .toString()
                     .padStart(2, '0')}`}
-                  onChange={(e) => {
-                    const [y, m, d] = e.target.value.split('-').map(Number);
-                    setStartDate(new Date(y, m - 1, d, 12, 0, 0)); // meio-dia
-                  }}
+                  onChange={(e) => setStartDate(parseLocalDate(e.target.value))}
                   className='border rounded p-2'
                 />
               </label>
@@ -579,18 +581,13 @@ export default function FitossanitarioApp() {
                 Data final:
                 <input
                   type='date'
-                  value={`${startDate.getFullYear()}-${(
-                    startDate.getMonth() + 1
-                  )
+                  value={`${endDate.getFullYear()}-${(endDate.getMonth() + 1)
                     .toString()
-                    .padStart(2, '0')}-${startDate
+                    .padStart(2, '0')}-${endDate
                     .getDate()
                     .toString()
                     .padStart(2, '0')}`}
-                  onChange={(e) => {
-                    const [y, m, d] = e.target.value.split('-').map(Number);
-                    setEndDate(new Date(y, m - 1, d, 12, 0, 0)); // meio-dia
-                  }}
+                  onChange={(e) => setEndDate(parseLocalDate(e.target.value))}
                   className='border rounded p-2'
                 />
               </label>
