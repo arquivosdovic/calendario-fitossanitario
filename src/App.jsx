@@ -553,7 +553,10 @@ export default function FitossanitarioApp() {
                 <input
                   type='date'
                   value={startDate.toISOString().slice(0, 10)}
-                  onChange={(e) => setStartDate(new Date(e.target.value))}
+                  onChange={(e) => {
+                    const [y, m, d] = e.target.value.split('-').map(Number);
+                    setStartDate(new Date(y, m - 1, d, 12, 0, 0)); // meio-dia
+                  }}
                   className='border rounded p-2'
                 />
               </label>
@@ -562,7 +565,10 @@ export default function FitossanitarioApp() {
                 <input
                   type='date'
                   value={endDate.toISOString().slice(0, 10)}
-                  onChange={(e) => setEndDate(new Date(e.target.value))}
+                  onChange={(e) => {
+                    const [y, m, d] = e.target.value.split('-').map(Number);
+                    setEndDate(new Date(y, m - 1, d, 12, 0, 0)); // meio-dia
+                  }}
                   className='border rounded p-2'
                 />
               </label>
