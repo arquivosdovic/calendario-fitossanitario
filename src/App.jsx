@@ -266,8 +266,12 @@ function generateSchedule({ startDate, endDate, selections }) {
 
   // Gera calendário por planta/dia
   const scheduleByPlant = {};
-  const totalDays =
-    Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+  // 1. Calcula a diferença em milissegundos
+  const diffTime = endDate.getTime() - startDate.getTime();
+  // 2. Converte para dias (1 dia = 86,400,000 ms)
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  // 3. Adiciona 1 para INCLUIR o dia final na contagem
+  const totalDays = diffDays + 1;
 
   for (const plant of Object.keys(selections)) {
     const needed = perPlantNeeded[plant];
@@ -338,9 +342,9 @@ function generateSchedule({ startDate, endDate, selections }) {
     current.setDate(current.getDate() + i);
     const pad = (n) => (n < 10 ? '0' + n : n);
     const dayKey = `${current.getFullYear()}-${pad(
-      // de getUTCFullYear()
-      current.getMonth() + 1 // de getUTCMonth()
-    )}-${pad(current.getDate())}`; // de getUTCDate()
+      // **Ajuste aqui**
+      current.getMonth() + 1
+    )}-${pad(current.getDate())}`;
 
     calendar[dayKey] = {};
     for (const p of PLANTS) calendar[dayKey][p] = [];
