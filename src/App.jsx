@@ -27,124 +27,148 @@ const PRODUCTS = [
   {
     id: 'sabao',
     nome: 'Sabão',
-    plantas: [
-      'Hortelã',
-      'Alecrim',
-      'Tomilho',
-      'Pimenta',
-      'Lírios / Mini Phalaenopsis',
-      'Antúrio',
-      'Manjericão',
-    ],
-    frequenciaDias: 10,
-    tipo: 'Curativa',
-    controla: ['Pulgões', 'Cochonilhas', 'Ácaros'],
-    incompativeis: ['neem'],
+    plantas: ['Hortelã', 'Alecrim', 'Tomilho', 'Manjericão', 'Pimenta'],
     seguroPara: {
       Hortelã: false,
       Alecrim: true,
       Tomilho: true,
       Manjericão: false,
       Pimenta: true,
-      'Lírios / Mini Phalaenopsis': false,
-      Antúrio: true,
     },
-    tempoAcao: '30–60 min',
-    exigeEnxague: true,
+    frequenciaDias: 10,
+    incompativeis: ['neem'],
+    controla: ['Pulgões', 'Cochonilhas', 'Ácaros'],
+    tipo: 'Curativa',
+    receita: {
+      ingredientes: ['1 colher de chá de sabão neutro', '1 litro de água'],
+      preparo: ['Misture bem os ingredientes e coloque em borrifador.'],
+      aplicacao: [
+        'Borrife diretamente sobre os insetos.',
+        'Faça teste em 1-2 folhas antes.',
+        'Remova cochonilhas grandes com algodão embebido em álcool.',
+      ],
+      tempoAcao: '3-4 dias entre aplicações até controle',
+      exigeEnxague: true,
+      nota: 'Pode queimar plantas sensíveis como manjericão e hortelã.',
+    },
   },
   {
     id: 'bicarbonato',
     nome: 'Bicarbonato',
-    plantas: [
-      'Hortelã',
-      'Alecrim',
-      'Tomilho',
-      'Manjericão',
-      'Pimenta',
-      'Lírios / Mini Phalaenopsis',
-    ],
-    frequenciaDias: 14,
-    tipo: 'Preventiva',
-    controla: ['Oídio', 'Míldio', 'Fungos foliares'],
-    incompativeis: ['leite', 'enxofre'],
+    plantas: ['Hortelã', 'Tomilho', 'Alecrim', 'Manjericão', 'Pimenta'],
     seguroPara: {
       Hortelã: true,
-      Alecrim: true,
       Tomilho: true,
+      Alecrim: true,
       Manjericão: true,
       Pimenta: true,
-      'Lírios / Mini Phalaenopsis': true,
-      Antúrio: false,
     },
-    tempoAcao: 'não necessário',
-    exigeEnxague: false,
+    frequenciaDias: 14,
+    incompativeis: ['leite', 'enxofre'],
+    controla: ['Oídio', 'Míldio', 'Fungos foliares'],
+    tipo: 'Preventiva',
+    receita: {
+      ingredientes: [
+        '50 ml de água',
+        '1 pitada de bicarbonato de sódio',
+        '1 gotinha de óleo de cozinha',
+        '1 gotinha de detergente neutro',
+      ],
+      preparo: ['Misture bem e coloque no borrifador.'],
+      aplicacao: [
+        'Borrife na parte de cima e embaixo das folhas afetadas.',
+        'No fim da tarde, para evitar queimaduras.',
+      ],
+      tempoAcao: '4 dias entre aplicações no início, depois 1 semana',
+      exigeEnxague: false,
+      nota: 'Agitar antes de usar e armazenar por no máximo 7 dias.',
+    },
   },
   {
     id: 'leite',
     nome: 'Leite',
-    plantas: [
-      'Hortelã',
-      'Alecrim',
-      'Tomilho',
-      'Manjericão',
-      'Pimenta',
-      'Lírios / Mini Phalaenopsis',
-    ],
+    plantas: ['Hortelã', 'Tomilho', 'Alecrim', 'Manjericão', 'Pimenta'],
+    seguroPara: {
+      Hortelã: true,
+      Tomilho: true,
+      Alecrim: true,
+      Manjericão: true,
+      Pimenta: true,
+    },
     frequenciaDias: 14,
-    tipo: 'Preventiva / Curativa leve',
-    controla: ['Oídio', 'Fungos foliares'],
     incompativeis: ['bicarbonato', 'enxofre'],
+    controla: ['Oídio', 'Fungos foliares'],
+    tipo: 'Preventiva / Curativa leve',
+    receita: {
+      ingredientes: ['25 ml de leite', '50 ml de água'],
+      preparo: ['Misture e coloque no borrifador.'],
+      aplicacao: ['Borrife sobre folhas afetadas, 2x por semana.'],
+      tempoAcao: 'Reaplicar 2x por semana até melhora',
+      exigeEnxague: false,
+      nota: 'Forma uma película protetora que reflete luz solar.',
+    },
+  },
+  {
+    id: 'enxofre',
+    nome: 'Enxofre',
+    plantas: ['Hortelã', 'Alecrim', 'Tomilho', 'Manjericão', 'Pimenta'],
     seguroPara: {
       Hortelã: true,
       Alecrim: true,
       Tomilho: true,
       Manjericão: true,
       Pimenta: true,
-      'Lírios / Mini Phalaenopsis': true,
-      Antúrio: true,
     },
-    tempoAcao: 'não necessário',
-    exigeEnxague: false,
-  },
-  {
-    id: 'enxofre',
-    nome: 'Enxofre',
-    plantas: ['Alecrim', 'Hortelã', 'Tomilho', 'Pimenta'],
     frequenciaDias: 14,
-    tipo: 'Preventiva e Curativa',
-    controla: ['Oídio', 'Fungos foliares', 'Ácaros'],
     incompativeis: ['neem', 'sabao', 'leite'],
-    seguroPara: {
-      Hortelã: true,
-      Alecrim: true,
-      Tomilho: true,
-      Manjericão: false,
-      Pimenta: true,
-      'Lírios / Mini Phalaenopsis': false,
-      Antúrio: false,
+    controla: ['Oídio', 'Fungos foliares', 'Ácaros'],
+    tipo: 'Preventiva e Curativa',
+    receita: {
+      ingredientes: ['1/8 colher de chá de enxofre', '250 ml de água'],
+      preparo: ['Misture bem e coloque em borrifador.'],
+      aplicacao: [
+        'Aplicar 1x por semana em ataques ativos.',
+        'Para prevenção, a cada 10–14 dias.',
+        'Aplicar em horários frescos (manhã ou fim da tarde).',
+      ],
+      tempoAcao: '7 dias para prevenção, 1 semana para tratamento ativo',
+      exigeEnxague: false,
+      nota: 'Evitar em folhas sensíveis expostas ao sol.',
     },
-    tempoAcao: 'não necessário',
-    exigeEnxague: false,
   },
   {
     id: 'alho',
     nome: 'Alho',
     plantas: ['Hortelã', 'Alecrim', 'Tomilho', 'Manjericão', 'Pimenta'],
-    frequenciaDias: 14,
-    tipo: 'Curativa leve',
-    controla: ['Pulgões', 'Cochonilhas', 'Moscas-brancas'],
-    incompativeis: ['neem', 'enxofre'],
     seguroPara: {
       Hortelã: true,
       Alecrim: true,
       Tomilho: true,
       Manjericão: true,
       Pimenta: true,
-      'Lírios / Mini Phalaenopsis': false,
-      Antúrio: true,
     },
-    tempoAcao: '2–3 h',
-    exigeEnxague: false,
+    frequenciaDias: 14,
+    incompativeis: ['neem', 'enxofre'],
+    controla: ['Pulgões', 'Cochonilhas', 'Moscas-brancas'],
+    tipo: 'Curativa leve',
+    receita: {
+      ingredientes: [
+        '1 dente de alho pequeno',
+        '50 ml de água',
+        'Opcional: 1 pitada de sabão neutro',
+      ],
+      preparo: [
+        'Amasse bem o alho e misture com a água.',
+        'Deixar descansar 2–3 horas e coar antes de colocar no borrifador.',
+      ],
+      aplicacao: [
+        'Borrife sobre folhas, principalmente embaixo.',
+        '1 vez por semana ou quando notar pragas.',
+      ],
+      tempoAcao: '1 semana por aplicação, repita se necessário',
+      exigeEnxague: false,
+      nota: 'Evitar sol muito forte para não queimar folhas.',
+    },
   },
   {
     id: 'neem',
@@ -158,21 +182,38 @@ const PRODUCTS = [
       'Antúrio',
       'Lírios / Mini Phalaenopsis',
     ],
-    frequenciaDias: 7,
-    tipo: 'Preventiva e Curativa',
-    controla: ['Pulgões', 'Cochonilhas', 'Ácaros', 'Moscas-brancas'],
-    incompativeis: ['enxofre', 'sabao', 'alho'],
     seguroPara: {
       Hortelã: true,
       Alecrim: true,
       Tomilho: true,
       Manjericão: true,
       Pimenta: true,
-      'Lírios / Mini Phalaenopsis': true,
       Antúrio: true,
+      'Lírios / Mini Phalaenopsis': true,
     },
-    tempoAcao: 'não necessário',
-    exigeEnxague: false,
+    frequenciaDias: 7,
+    incompativeis: ['enxofre', 'sabao', 'alho'],
+    controla: ['Pulgões', 'Cochonilhas', 'Ácaros', 'Moscas-brancas'],
+    tipo: 'Preventiva e Curativa',
+    receita: {
+      ingredientes: [
+        '1 colher de sopa (15 ml) de óleo de neem',
+        '1 litro de água morna',
+        '1/2 colher de chá de detergente neutro',
+      ],
+      preparo: [
+        'Misture o óleo e o detergente na água morna.',
+        'Coloque a solução em borrifador.',
+      ],
+      aplicacao: [
+        'Borrife todas as partes da planta, inclusive folhas e caules.',
+        'Uma vez por semana.',
+        'Remova manualmente aglomerados maiores se possível.',
+      ],
+      tempoAcao: '3-4 semanas de aplicação contínua para eliminação completa',
+      exigeEnxague: false,
+      nota: 'O neem age lentamente, então repita por algumas semanas.',
+    },
   },
 ];
 
@@ -650,6 +691,67 @@ export default function FitossanitarioApp() {
                 </div>
               )}
               {p.nota && <div className='text-xs italic'>Dica: {p.nota}</div>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className='mt-6 text-sm'>
+        <h3 className='font-medium'>Receitas das soluções</h3>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 text-sm'>
+          {PRODUCTS.map((p) => (
+            <div key={p.id} className='border rounded p-2'>
+              <strong>{p.nome}</strong>
+              <div className='mt-1'>
+                {p.receita ? (
+                  <div>
+                    <div className='text-xs font-semibold'>Ingredientes:</div>
+                    <ul className='list-disc pl-4 text-xs'>
+                      {p.receita.ingredientes.map((ing, idx) => (
+                        <li key={idx}>{ing}</li>
+                      ))}
+                    </ul>
+
+                    <div className='text-xs font-semibold mt-1'>
+                      Modo de preparo:
+                    </div>
+                    <ul className='list-disc pl-4 text-xs'>
+                      {p.receita.preparo.map((step, idx) => (
+                        <li key={idx}>{step}</li>
+                      ))}
+                    </ul>
+
+                    <div className='text-xs font-semibold mt-1'>Aplicação:</div>
+                    <ul className='list-disc pl-4 text-xs'>
+                      {p.receita.aplicacao.map((step, idx) => (
+                        <li key={idx}>{step}</li>
+                      ))}
+                    </ul>
+
+                    {p.receita.tempoAcao && (
+                      <div className='text-xs mt-1'>
+                        ⏱️ Tempo de ação: {p.receita.tempoAcao}
+                      </div>
+                    )}
+                    {p.receita.exigeEnxague !== undefined && (
+                      <div className='text-xs'>
+                        💧 Necessita enxágue?{' '}
+                        {p.receita.exigeEnxague ? 'Sim' : 'Não'}
+                      </div>
+                    )}
+
+                    {p.receita.nota && (
+                      <div className='text-xs italic mt-1'>
+                        💡 Dica: {p.receita.nota}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <span className='text-gray-500 text-xs'>
+                    Receita não especificada.
+                  </span>
+                )}
+              </div>
             </div>
           ))}
         </div>
