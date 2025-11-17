@@ -749,22 +749,6 @@ export default function FitossanitarioApp() {
           {PRODUCTS.map((p) => (
             <div key={p.id} className='border rounded p-3'>
               <strong>{p.nome}</strong>
-              <div className='text-xs mt-1'>
-                <em>Tipo:</em> {p.tipo}
-              </div>
-              <div className='text-xs mt-1'>
-                <em>Freqência:</em> a cada {p.frequenciaDias} dias
-              </div>
-              <div className='text-xs mt-1'>
-                <em>Segurança por planta:</em>
-                <ul className='list-disc pl-5'>
-                  {Object.entries(p.seguroPara).map(([pl, seguro]) => (
-                    <li key={pl}>
-                      {pl}: {seguro ? '✅ Seguro' : '⚠️ Sensível'}
-                    </li>
-                  ))}
-                </ul>
-              </div>
 
               {p.receita && (
                 <div className='mt-2 text-xs'>
