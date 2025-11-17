@@ -1,18 +1,15 @@
 import React, { useState, useMemo } from "react";
 
-// Calendário Fitossanitário - componente React (single-file)
-// Usa Tailwind para estilo
-
 const PLANTS = [
   "Hortelã",
   "Alecrim",
   "Tomilho",
+  "Manjericão", // colocado entre Tomilho e Pimenta
   "Pimenta",
   "Lírio Asiático",
   "Lírio da Paz",
   "Mini Phalaenopsis",
   "Antúrio",
-  "Manjericão",
 ];
 
 const PESTS = [
@@ -38,18 +35,22 @@ const PRODUCTS = [
       "Hortelã": "cuidado – enxaguar após 30–60 min",
       "Alecrim": "seguro, enxágue opcional",
       "Tomilho": "seguro, enxágue opcional",
+      "Manjericão": "não recomendado",
       "Pimenta": "seguro, enxágue opcional",
       "Lírio Asiático": "cuidado – enxaguar após 30–60 min",
       "Lírio da Paz": "cuidado – enxaguar após 30–60 min",
       "Mini Phalaenopsis": "não recomendado",
       "Antúrio": "cuidado – enxaguar após 30–60 min",
-      "Manjericão": "não recomendado",
     },
+    receita: `- 70 ml de álcool 70%
+- 1 litro de água
+- 1 colher de chá de sabão neutro
+Borrife diretamente sobre os insetos. Teste antes em uma folha. Repetir a cada 3–4 dias.`
   },
   {
     id: "bicarbonato",
     nome: "Bicarbonato",
-    plantas: ["Hortelã", "Tomilho", "Alecrim", "Pimenta", "Lírio Asiático"],
+    plantas: ["Hortelã", "Tomilho", "Alecrim", "Pimenta", "Lírio Asiático", "Manjericão"],
     frequenciaDias: 14,
     incompativeis: ["leite", "enxofre"],
     controla: ["Oídio", "Míldio", "Fungos foliares"],
@@ -58,18 +59,23 @@ const PRODUCTS = [
       "Hortelã": "seguro, enxágue opcional",
       "Tomilho": "seguro, enxágue opcional",
       "Alecrim": "seguro, enxágue opcional",
+      "Manjericão": "seguro, enxágue opcional",
       "Pimenta": "seguro, enxágue opcional",
       "Lírio Asiático": "cuidado, enxágue opcional",
       "Lírio da Paz": "não recomendado",
       "Mini Phalaenopsis": "não recomendado",
       "Antúrio": "não recomendado",
-      "Manjericão": "seguro, enxágue opcional",
     },
+    receita: `- 50 ml de água
+- 1 pitada de bicarbonato de sódio
+- 1 gotinha de óleo vegetal
+- 1 gotinha de detergente neutro
+Borrife sobre folhas afetadas, 2x por semana. Agitar antes de usar.`
   },
   {
     id: "leite",
     nome: "Leite",
-    plantas: ["Hortelã", "Tomilho", "Alecrim", "Pimenta", "Lírio Asiático"],
+    plantas: ["Hortelã", "Tomilho", "Alecrim", "Pimenta", "Lírio Asiático", "Manjericão"],
     frequenciaDias: 14,
     incompativeis: ["bicarbonato", "enxofre"],
     controla: ["Oídio", "Fungos foliares"],
@@ -78,13 +84,16 @@ const PRODUCTS = [
       "Hortelã": "seguro, enxágue opcional",
       "Tomilho": "seguro, enxágue opcional",
       "Alecrim": "seguro, enxágue opcional",
+      "Manjericão": "seguro, enxágue opcional",
       "Pimenta": "seguro, enxágue opcional",
       "Lírio Asiático": "cuidado, enxágue opcional",
       "Lírio da Paz": "cuidado, enxágue opcional",
       "Mini Phalaenopsis": "não recomendado",
       "Antúrio": "cuidado, enxágue opcional",
-      "Manjericão": "seguro, enxágue opcional",
     },
+    receita: `- 1 parte de leite
+- 2 partes de água
+Borrife 2x por semana sobre folhas afetadas, principalmente em oídio.`
   },
   {
     id: "enxofre",
@@ -98,13 +107,16 @@ const PRODUCTS = [
       "Hortelã": "seguro em folhas adultas, aplicar no fim do dia",
       "Alecrim": "seguro em folhas adultas, aplicar no fim do dia",
       "Tomilho": "seguro em folhas adultas, aplicar no fim do dia",
+      "Manjericão": "não recomendado",
       "Pimenta": "seguro, aplicar no fim do dia",
       "Lírio Asiático": "não recomendado",
       "Lírio da Paz": "não recomendado",
       "Mini Phalaenopsis": "não recomendado",
       "Antúrio": "não recomendado",
-      "Manjericão": "não recomendado",
     },
+    receita: `- 1/8 colher de chá de enxofre
+- 250 ml de água
+Aplicar 1x/semana em ataques ativos. Prevenção a cada 10–14 dias.`
   },
   {
     id: "alho",
@@ -116,15 +128,18 @@ const PRODUCTS = [
     tipo: "Curativa leve",
     seguranca: {
       "Hortelã": "seguro, enxágue opcional",
-      "Alecrim": "seguro, enxágue opcional",
       "Tomilho": "seguro, enxágue opcional",
+      "Alecrim": "seguro, enxágue opcional",
+      "Manjericão": "não recomendado",
       "Pimenta": "seguro, enxágue opcional",
       "Lírio Asiático": "não recomendado",
       "Lírio da Paz": "não recomendado",
       "Mini Phalaenopsis": "não recomendado",
       "Antúrio": "não recomendado",
-      "Manjericão": "não recomendado",
     },
+    receita: `- 1 dente de alho pequeno
+- 50 ml de água
+Deixar descansar 2–3h, coar e borrifar. Repetir 1x/semana.`
   },
   {
     id: "neem",
@@ -138,13 +153,17 @@ const PRODUCTS = [
       "Hortelã": "seguro, aplicar à tarde, sem enxágue",
       "Alecrim": "seguro, aplicar à tarde, sem enxágue",
       "Tomilho": "seguro, aplicar à tarde, sem enxágue",
+      "Manjericão": "seguro, aplicar à tarde, sem enxágue",
       "Pimenta": "seguro, aplicar à tarde, sem enxágue",
       "Lírio Asiático": "seguro, aplicar à tarde, sem enxágue",
       "Lírio da Paz": "seguro, aplicar à tarde, sem enxágue",
       "Mini Phalaenopsis": "seguro, aplicar à tarde, sem enxágue",
       "Antúrio": "seguro, aplicar à tarde, sem enxágue",
-      "Manjericão": "seguro, aplicar à tarde, sem enxágue",
     },
+    receita: `- 1 colher de sopa de óleo de neem
+- 1 litro de água morna
+- 1/2 colher de chá de detergente neutro
+Borrife todas as partes da planta, repetir 1x/semana por 3–4 semanas.`
   },
 ];
 
