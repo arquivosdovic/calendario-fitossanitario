@@ -1,15 +1,16 @@
 import React, { useState, useMemo } from 'react';
 import { DateTime } from 'luxon';
 
-
 const TARGET_TIMEZONE = 'America/Sao_Paulo';
 
 const parseLocalDate = (str) => {
   // 1. Usa DateTime.fromISO para ler a string 'YYYY-MM-DD'
   // 2. Define o fuso horário de origem como 'local' (GMT-3)
   // 3. Define o horário para 'startOf("day")' para garantir 00:00:00
-  
-  return DateTime.fromISO(str, { zone: TARGET_TIMEZONE }).startOf('day').toJSDate();
+
+  return DateTime.fromISO(str, { zone: TARGET_TIMEZONE })
+    .startOf('day')
+    .toJSDate();
 };
 
 // Calendário Fitossanitário - componente React (single-file)
@@ -260,10 +261,12 @@ function isDisease(pest) {
 }
 
 function generateSchedule({ startDate, endDate, selections }) {
+  // OBS: Assume que startDate e endDate são agora objetos Luxon DateTime.
   const calendar = {};
   const perPlantNeeded = {};
+  const scheduleByPlant = {};
 
-  // Calcula produtos necessários por planta (mesma lógica que você já tem)
+  // --- 1. Calcula produtos necessários por planta ---
   for (const plant of Object.keys(selections)) {
     const pests = selections[plant].pests || [];
     const needed = new Set();
@@ -279,19 +282,32 @@ function generateSchedule({ startDate, endDate, selections }) {
     perPlantNeeded[plant] = Array.from(needed);
   }
 
-  // Gera calendário por planta/dia
-  const scheduleByPlant = {};
-  // 1. Calcula a diferença em milissegundos
-  const diffTime = endDate.getTime() - startDate.getTime();
-  // 2. Converte para dias (1 dia = 86,400,000 ms)
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  // 3. Adiciona 1 para INCLUIR o dia final na contagem
-  const totalDays = diffDays + 1;
+  // --- 2. CÁLCULO DE DIAS E INICIALIZAÇÃO DO CALENDÁRIO (LUXON SAFE) ---
+
+  // Calcula a diferença de dias usando Luxon (seguro para fuso)
+  // O +1 garante que o dia final (endDate) seja incluído.
+  const totalDays = Math.ceil(endDate.diff(startDate, 'days').days) + 1;
+
+  // Loop para INICIALIZAR o objeto 'calendar' e definir as chaves.
+  for (let i = 0; i < totalDays; i++) {
+    // Luxon adiciona dias de forma segura, mantendo o fuso correto.
+    const currentLuxon = startDate.plus({ days: i });
+
+    // dayKey extraído com formato ISO 'YYYY-MM-DD', garantindo o dia correto.
+    const dayKey = currentLuxon.toISODate();
+
+    calendar[dayKey] = {};
+    for (const p of PLANTS) calendar[dayKey][p] = [];
+  }
+
+  // -------------------------------------------------------------
+
+  // --- 3. LÓGICA DE AGENDAMENTO (CÁLCULO DOS DIAS DE APLICAÇÃO) ---
 
   for (const plant of Object.keys(selections)) {
     const needed = perPlantNeeded[plant];
     scheduleByPlant[plant] = [];
-    const placed = [];
+    const placed = []; // Usado para rastrear conflitos na planta atual
 
     for (const pid of needed) {
       const prod = PRODUCTS.find((p) => p.id === pid);
@@ -301,6 +317,7 @@ function generateSchedule({ startDate, endDate, selections }) {
       const incompatIds = prod.incompativeis || [];
       const minSeparation = 3;
 
+      // Busca o primeiro dia disponível que não tem conflito
       while (dayOffset < totalDays) {
         const conflictSameDay = placed.some(
           (pl) =>
@@ -325,6 +342,7 @@ function generateSchedule({ startDate, endDate, selections }) {
 
       if (dayOffset >= totalDays) continue;
 
+      // Agendamento das repetições
       for (let d = dayOffset; d < totalDays; d += prod.frequenciaDias) {
         const conflictSameDay = placed.some(
           (pl) =>
@@ -351,31 +369,33 @@ function generateSchedule({ startDate, endDate, selections }) {
     scheduleByPlant[plant] = placed;
   }
 
-  // Preenche calendário
-  for (let i = 0; i < totalDays; i++) {
-    const current = new Date(startDate);
-    current.setDate(current.getDate() + i);
-    const pad = (n) => (n < 10 ? '0' + n : n);
-    const dayKey = `${current.getFullYear()}-${pad(
-      // **Ajuste aqui**
-      current.getMonth() + 1
-    )}-${pad(current.getDate())}`;
+  // -----------------------------------------------------------------
 
-    calendar[dayKey] = {};
-    for (const p of PLANTS) calendar[dayKey][p] = [];
-  }
+  // --- 4. PREENCHIMENTO FINAL DO CALENDÁRIO (CÓDIGO REMOVIDO/SUBSTITUÍDO) ---
+
+  // O loop anterior de inicialização do calendário já fez a primeira passagem.
+  // O código abaixo preenche o objeto 'calendar' com os agendamentos calculados.
+
+  // Removi o loop redundante que usava new Date(startDate) e .setDate()!
 
   for (const plant of Object.keys(scheduleByPlant)) {
     for (const item of scheduleByPlant[plant]) {
-      const current = new Date(startDate);
-      current.setDate(current.getDate() + item.dayOffset);
-      const pad = (n) => (n < 10 ? '0' + n : n);
-      const dayKey = `${current.getFullYear()}-${pad(
-        current.getMonth() + 1
-      )}-${pad(current.getDate())}`;
+      // CORREÇÃO: Usar o Luxon para calcular a data correta
+      const currentLuxon = startDate.plus({ days: item.dayOffset });
+
+      // CORREÇÃO: Usar toISODate() para gerar o dayKey correto
+      const dayKey = currentLuxon.toISODate();
+
+      // Verificar se a chave existe (deve existir, pois foi inicializada no passo 2)
+      if (!calendar[dayKey]) {
+        // Caso extremo: Se a chave não existir, pular (debug: nunca deveria acontecer)
+        continue;
+      }
 
       const prod = PRODUCTS.find((p) => p.id === item.id);
       if (!prod) continue;
+
+      // Adiciona o produto à data/planta correta
       calendar[dayKey][plant].push(
         prod.nome + (prod.tipo ? ` (${prod.tipo})` : '')
       );
@@ -433,10 +453,21 @@ export default function FitossanitarioApp() {
     new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30)
   );
 
-  const { calendar, perPlantNeeded } = useMemo(
-    () => generateSchedule({ startDate, endDate, selections }),
-    [startDate, endDate, selections]
-  );
+  const { calendar, perPlantNeeded } = useMemo(() => {
+    // Converte as datas de estado (Date nativo) para Luxon DateTime no fuso correto.
+    const luxonStartDate = DateTime.fromJSDate(startDate, {
+      zone: TARGET_TIMEZONE,
+    });
+    const luxonEndDate = DateTime.fromJSDate(endDate, {
+      zone: TARGET_TIMEZONE,
+    });
+
+    return generateSchedule({
+      startDate: luxonStartDate,
+      endDate: luxonEndDate,
+      selections,
+    });
+  }, [startDate, endDate, selections]);
 
   const { daysInMonth } = monthInfo(year, monthIndex);
 
