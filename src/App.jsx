@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
 
 const parseLocalDate = (str) => {
-  const [y, m, d] = str.split('-').map(Number);
-  // Cria timestamp UTC para a data sem hora
-  const timestamp = Date.UTC(y, m - 1, d);
-  return new Date(timestamp);
+  // Cria a data diretamente a partir da string no fuso local,
+  // garantindo que ela seja lida como o início do dia local
+  // '2025-11-17' -> 2025-11-17T00:00:00-03:00 (no fuso local)
+  return new Date(str + 'T00:00:00');
 };
 
 // Calendário Fitossanitário - componente React (single-file)
@@ -337,9 +337,10 @@ function generateSchedule({ startDate, endDate, selections }) {
     const current = new Date(startDate);
     current.setDate(current.getDate() + i);
     const pad = (n) => (n < 10 ? '0' + n : n);
-    const dayKey = `${current.getUTCFullYear()}-${pad(
-      current.getUTCMonth() + 1
-    )}-${pad(current.getUTCDate())}`;
+    const dayKey = `${current.getFullYear()}-${pad(
+      // de getUTCFullYear()
+      current.getMonth() + 1 // de getUTCMonth()
+    )}-${pad(current.getDate())}`; // de getUTCDate()
 
     calendar[dayKey] = {};
     for (const p of PLANTS) calendar[dayKey][p] = [];
@@ -567,12 +568,12 @@ export default function FitossanitarioApp() {
                 Data inicial:
                 <input
                   type='date'
-                  value={`${startDate.getUTCFullYear()}-${(
-                    startDate.getUTCMonth() + 1
-                  )
+                  value={`${startDate.getFullYear()}-${(
+                    startDate.getMonth() + 1
+                  ) // Use getMonth() e adicione 1
                     .toString()
                     .padStart(2, '0')}-${startDate
-                    .getUTCDate()
+                    .getDate() // Use getDate()
                     .toString()
                     .padStart(2, '0')}`}
                   onChange={(e) => setStartDate(parseLocalDate(e.target.value))}
@@ -583,12 +584,10 @@ export default function FitossanitarioApp() {
                 Data final:
                 <input
                   type='date'
-                  value={`${endDate.getUTCFullYear()}-${(
-                    endDate.getUTCMonth() + 1
-                  )
+                  value={`${endDate.getFullYear()}-${(endDate.getMonth() + 1)
                     .toString()
                     .padStart(2, '0')}-${endDate
-                    .getUTCDate()
+                    .getDate()
                     .toString()
                     .padStart(2, '0')}`}
                   onChange={(e) => setEndDate(parseLocalDate(e.target.value))}
