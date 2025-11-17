@@ -237,10 +237,11 @@ function isDisease(pest) {
   return diseases.includes(pest);
 }
 
-function generateSchedule({ year, monthIndex, selections }) {
-  const { daysInMonth } = monthInfo(year, monthIndex);
+function generateSchedule({ startDate, endDate, selections }) {
+  const calendar = {};
   const perPlantNeeded = {};
 
+  // Calcula produtos necessários por planta (mesma lógica que você já tem)
   for (const plant of Object.keys(selections)) {
     const pests = selections[plant].pests || [];
     const needed = new Set();
@@ -256,7 +257,10 @@ function generateSchedule({ year, monthIndex, selections }) {
     perPlantNeeded[plant] = Array.from(needed);
   }
 
+  // Gera calendário por planta/dia
   const scheduleByPlant = {};
+  const totalDays =
+    Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
 
   for (const plant of Object.keys(selections)) {
     const needed = perPlantNeeded[plant];
@@ -267,14 +271,14 @@ function generateSchedule({ year, monthIndex, selections }) {
       const prod = PRODUCTS.find((p) => p.id === pid);
       if (!prod) continue;
 
-      let day = 1;
+      let dayOffset = 0;
       const incompatIds = prod.incompativeis || [];
       const minSeparation = 3;
 
-      while (day <= daysInMonth) {
+      while (dayOffset < totalDays) {
         const conflictSameDay = placed.some(
           (pl) =>
-            pl.day === day &&
+            pl.dayOffset === dayOffset &&
             (incompatIds.includes(pl.id) ||
               PRODUCTS.find((p) => p.id === pl.id).incompativeis.includes(
                 prod.id
@@ -286,21 +290,19 @@ function generateSchedule({ year, monthIndex, selections }) {
             incompatIds.includes(pl.id) ||
             (otherProd && otherProd.incompativeis.includes(prod.id));
           if (!areIncompat) return false;
-          return Math.abs(pl.day - day) < minSeparation;
+          return Math.abs(pl.dayOffset - dayOffset) < minSeparation;
         });
 
         if (!conflictSameDay && !conflictClose) break;
-        day++;
+        dayOffset++;
       }
 
-      if (day > daysInMonth) {
-        continue;
-      }
+      if (dayOffset >= totalDays) continue;
 
-      for (let d = day; d <= daysInMonth; d += prod.frequenciaDias) {
+      for (let d = dayOffset; d < totalDays; d += prod.frequenciaDias) {
         const conflictSameDay = placed.some(
           (pl) =>
-            pl.day === d &&
+            pl.dayOffset === d &&
             (prod.incompativeis.includes(pl.id) ||
               PRODUCTS.find((p) => p.id === pl.id).incompativeis.includes(
                 prod.id
@@ -312,28 +314,34 @@ function generateSchedule({ year, monthIndex, selections }) {
             prod.incompativeis.includes(pl.id) ||
             (otherProd && otherProd.incompativeis.includes(prod.id));
           if (!areIncompat) return false;
-          return Math.abs(pl.day - d) < 3;
+          return Math.abs(pl.dayOffset - d) < minSeparation;
         });
         if (conflictSameDay || conflictClose) continue;
-        placed.push({ day: d, id: pid });
+        placed.push({ dayOffset: d, id: pid });
       }
     }
 
-    placed.sort((a, b) => a.day - b.day);
+    placed.sort((a, b) => a.dayOffset - b.dayOffset);
     scheduleByPlant[plant] = placed;
   }
 
-  const calendar = {};
-  for (let d = 1; d <= daysInMonth; d++) {
-    calendar[d] = {};
-    for (const p of PLANTS) calendar[d][p] = [];
+  // Preenche calendário
+  for (let i = 0; i < totalDays; i++) {
+    const current = new Date(startDate);
+    current.setDate(current.getDate() + i);
+    const dayKey = current.toISOString().split('T')[0];
+    calendar[dayKey] = {};
+    for (const p of PLANTS) calendar[dayKey][p] = [];
   }
 
   for (const plant of Object.keys(scheduleByPlant)) {
     for (const item of scheduleByPlant[plant]) {
+      const current = new Date(startDate);
+      current.setDate(current.getDate() + item.dayOffset);
+      const dayKey = current.toISOString().split('T')[0];
       const prod = PRODUCTS.find((p) => p.id === item.id);
       if (!prod) continue;
-      calendar[item.day][plant].push(
+      calendar[dayKey][plant].push(
         prod.nome + (prod.tipo ? ` (${prod.tipo})` : '')
       );
     }
@@ -384,9 +392,10 @@ export default function FitossanitarioApp() {
   }
 
   const { calendar, perPlantNeeded } = useMemo(
-    () => generateSchedule({ year, monthIndex, selections }),
-    [year, monthIndex, selections]
+    () => generateSchedule({ startDate, endDate, selections }),
+    [startDate, endDate, selections]
   );
+
   const { daysInMonth } = monthInfo(year, monthIndex);
 
   // 🖨️ Função para imprimir só a tabela - corrigida para não fechar imediatamente
@@ -606,21 +615,19 @@ export default function FitossanitarioApp() {
             </tr>
           </thead>
           <tbody>
-            {Array.from({ length: daysInMonth }).map((_, i) => {
-              const day = i + 1;
-              const weekday = new Date(year, monthIndex, day).getDay();
+            {Object.keys(calendar).map((dayKey) => {
+              const current = new Date(dayKey);
+              const weekday = current.getDay();
               return (
-                <tr key={day} className='hover:bg-gray-50'>
+                <tr key={dayKey} className='hover:bg-gray-50'>
                   <td className='p-2 border align-top' style={{ width: 120 }}>
-                    {day} — {WEEKDAYS[weekday]}
+                    {current.getDate()} — {WEEKDAYS[weekday]}
                   </td>
                   {PLANTS.map((plant) => (
-                    <td key={plant + day} className='p-2 border align-top'>
-                      {calendar[day] &&
-                      calendar[day][plant] &&
-                      calendar[day][plant].length ? (
+                    <td key={plant + dayKey} className='p-2 border align-top'>
+                      {calendar[dayKey][plant].length ? (
                         <ul className='list-disc pl-5 text-sm'>
-                          {calendar[day][plant].map((txt, idx) => (
+                          {calendar[dayKey][plant].map((txt, idx) => (
                             <li key={idx}>{txt}</li>
                           ))}
                         </ul>
