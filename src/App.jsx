@@ -391,6 +391,9 @@ export default function FitossanitarioApp() {
     });
   }
 
+  const startDate = new Date(year, monthIndex, 1);
+  const endDate = new Date(year, monthIndex + 1, 0);
+
   const { calendar, perPlantNeeded } = useMemo(
     () => generateSchedule({ startDate, endDate, selections }),
     [startDate, endDate, selections]
