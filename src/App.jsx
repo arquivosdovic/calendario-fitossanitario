@@ -2,10 +2,9 @@ import React, { useState, useMemo } from 'react';
 
 const parseLocalDate = (str) => {
   const [y, m, d] = str.split('-').map(Number);
-  const date = new Date();
-  date.setFullYear(y, m - 1, d);
-  date.setHours(0, 0, 0, 0); // zera horas, minutos, segundos e ms
-  return date;
+  // Cria timestamp UTC para a data sem hora
+  const timestamp = Date.UTC(y, m - 1, d);
+  return new Date(timestamp);
 };
 
 // Calendário Fitossanitário - componente React (single-file)
@@ -338,9 +337,9 @@ function generateSchedule({ startDate, endDate, selections }) {
     const current = new Date(startDate);
     current.setDate(current.getDate() + i);
     const pad = (n) => (n < 10 ? '0' + n : n);
-    const dayKey = `${current.getFullYear()}-${pad(
-      current.getMonth() + 1
-    )}-${pad(current.getDate())}`;
+    const dayKey = `${current.getUTCFullYear()}-${pad(
+      current.getUTCMonth() + 1
+    )}-${pad(current.getUTCDate())}`;
 
     calendar[dayKey] = {};
     for (const p of PLANTS) calendar[dayKey][p] = [];
@@ -568,16 +567,32 @@ export default function FitossanitarioApp() {
                 Data inicial:
                 <input
                   type='date'
-                  value={startDate.toISOString().slice(0, 10)}
+                  value={`${startDate.getUTCFullYear()}-${(
+                    startDate.getUTCMonth() + 1
+                  )
+                    .toString()
+                    .padStart(2, '0')}-${startDate
+                    .getUTCDate()
+                    .toString()
+                    .padStart(2, '0')}`}
                   onChange={(e) => setStartDate(parseLocalDate(e.target.value))}
+                  className='border rounded p-2'
                 />
               </label>
               <label className='flex flex-col'>
                 Data final:
                 <input
                   type='date'
-                  value={endDate.toISOString().slice(0, 10)}
+                  value={`${endDate.getUTCFullYear()}-${(
+                    endDate.getUTCMonth() + 1
+                  )
+                    .toString()
+                    .padStart(2, '0')}-${endDate
+                    .getUTCDate()
+                    .toString()
+                    .padStart(2, '0')}`}
                   onChange={(e) => setEndDate(parseLocalDate(e.target.value))}
+                  className='border rounded p-2'
                 />
               </label>
             </div>
