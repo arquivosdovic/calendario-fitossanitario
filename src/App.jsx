@@ -415,6 +415,26 @@ export default function FitossanitarioApp() {
             })}
           </tbody>
         </table>
+        <div className="mt-4 p-4 bg-gray-50 border rounded text-sm">
+  <h3 className="font-medium mb-2">Observações importantes:</h3>
+  <ul className="list-disc pl-5 space-y-1">
+    <li>Lírio da Paz: ⚠️ nenhum produto é totalmente seguro. Teste antes ou evite aplicação.</li>
+    <li>Mini Phalaenopsis: teste qualquer produto em 1 folha antes.</li>
+    <li>Neem: aplicar à tarde, enxágue opcional, observe sensibilidade da planta.</li>
+    <li>Produtos com enxágue indicado devem ser lavados após o período recomendado.</li>
+  </ul>
+
+  <h3 className="font-medium mt-4 mb-2">Legenda de produtos:</h3>
+  <ul className="list-disc pl-5 space-y-1">
+    <li><strong>Sabão:</strong> curativo, controla pulgões, cochonilhas, ácaros.</li>
+    <li><strong>Bicarbonato:</strong> preventivo, controla oídio, míldio, fungos foliares.</li>
+    <li><strong>Leite:</strong> preventivo/curativo leve, controla oídio e fungos foliares.</li>
+    <li><strong>Enxofre:</strong> preventivo e curativo, controla fungos e ácaros.</li>
+    <li><strong>Alho:</strong> curativo leve, controla pulgões, cochonilhas, moscas-brancas.</li>
+    <li><strong>Neem:</strong> preventivo e curativo, controla pulgões, cochonilhas, ácaros e moscas-brancas.</li>
+  </ul>
+</div>
+
       </div>
     </div>
   );
