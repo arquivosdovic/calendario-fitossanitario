@@ -391,8 +391,12 @@ export default function FitossanitarioApp() {
     });
   }
 
-  const startDate = new Date(year, monthIndex, 1);
-  const endDate = new Date(year, monthIndex + 1, 0);
+  const [startDate, setStartDate] = useState(
+    new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  );
+  const [endDate, setEndDate] = useState(
+    new Date(today.getFullYear(), today.getMonth(), today.getDate() + 30)
+  );
 
   const { calendar, perPlantNeeded } = useMemo(
     () => generateSchedule({ startDate, endDate, selections }),
@@ -541,27 +545,28 @@ export default function FitossanitarioApp() {
         </div>
 
         <div>
-          <h2 className='font-medium'>Mês</h2>
-          <div className='flex gap-2 items-center mt-2'>
-            <select
-              value={monthIndex}
-              onChange={(e) => setMonthIndex(parseInt(e.target.value))}
-              className='border rounded p-2'
-            >
-              {Array.from({ length: 12 }).map((_, i) => (
-                <option value={i} key={i}>
-                  {new Date(year, i, 1).toLocaleString('pt-BR', {
-                    month: 'long',
-                  })}
-                </option>
-              ))}
-            </select>
-            <input
-              type='number'
-              value={year}
-              onChange={(e) => setYear(parseInt(e.target.value) || year)}
-              className='border rounded p-2 w-28'
-            />
+          <div>
+            <h2 className='font-medium'>Período do Calendário</h2>
+            <div className='flex flex-col gap-2 mt-2'>
+              <label className='flex flex-col'>
+                Data inicial:
+                <input
+                  type='date'
+                  value={startDate.toISOString().slice(0, 10)}
+                  onChange={(e) => setStartDate(new Date(e.target.value))}
+                  className='border rounded p-2'
+                />
+              </label>
+              <label className='flex flex-col'>
+                Data final:
+                <input
+                  type='date'
+                  value={endDate.toISOString().slice(0, 10)}
+                  onChange={(e) => setEndDate(new Date(e.target.value))}
+                  className='border rounded p-2'
+                />
+              </label>
+            </div>
           </div>
 
           <div className='mt-4'>
