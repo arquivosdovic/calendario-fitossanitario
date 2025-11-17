@@ -697,61 +697,71 @@ export default function FitossanitarioApp() {
       </div>
 
       <div className='mt-6 text-sm'>
-        <h3 className='font-medium'>Receitas das soluções</h3>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-2 text-sm'>
+        <h3 className='font-medium'>Receitas e instruções de aplicação</h3>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4 mt-2'>
           {PRODUCTS.map((p) => (
-            <div key={p.id} className='border rounded p-2'>
+            <div key={p.id} className='border rounded p-3'>
               <strong>{p.nome}</strong>
-              <div className='mt-1'>
-                {p.receita ? (
-                  <div>
-                    <div className='text-xs font-semibold'>Ingredientes:</div>
-                    <ul className='list-disc pl-4 text-xs'>
-                      {p.receita.ingredientes.map((ing, idx) => (
-                        <li key={idx}>{ing}</li>
-                      ))}
-                    </ul>
-
-                    <div className='text-xs font-semibold mt-1'>
-                      Modo de preparo:
-                    </div>
-                    <ul className='list-disc pl-4 text-xs'>
-                      {p.receita.preparo.map((step, idx) => (
-                        <li key={idx}>{step}</li>
-                      ))}
-                    </ul>
-
-                    <div className='text-xs font-semibold mt-1'>Aplicação:</div>
-                    <ul className='list-disc pl-4 text-xs'>
-                      {p.receita.aplicacao.map((step, idx) => (
-                        <li key={idx}>{step}</li>
-                      ))}
-                    </ul>
-
-                    {p.receita.tempoAcao && (
-                      <div className='text-xs mt-1'>
-                        ⏱️ Tempo de ação: {p.receita.tempoAcao}
-                      </div>
-                    )}
-                    {p.receita.exigeEnxague !== undefined && (
-                      <div className='text-xs'>
-                        💧 Necessita enxágue?{' '}
-                        {p.receita.exigeEnxague ? 'Sim' : 'Não'}
-                      </div>
-                    )}
-
-                    {p.receita.nota && (
-                      <div className='text-xs italic mt-1'>
-                        💡 Dica: {p.receita.nota}
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <span className='text-gray-500 text-xs'>
-                    Receita não especificada.
-                  </span>
-                )}
+              <div className='text-xs mt-1'>
+                <em>Tipo:</em> {p.tipo}
               </div>
+              <div className='text-xs mt-1'>
+                <em>Freqência:</em> a cada {p.frequenciaDias} dias
+              </div>
+              <div className='text-xs mt-1'>
+                <em>Controla:</em> {p.controla.join(', ')}
+              </div>
+              <div className='text-xs mt-1'>
+                <em>Segurança por planta:</em>{' '}
+                {Object.entries(p.seguroPara)
+                  .map(
+                    ([pl, seguro]) => `${pl}: ${seguro ? 'Seguro' : 'Evitar'}`
+                  )
+                  .join('; ')}
+              </div>
+
+              {p.receita && (
+                <div className='mt-2 text-xs'>
+                  <div>
+                    <strong>Ingredientes:</strong>
+                  </div>
+                  <ul className='list-disc pl-5'>
+                    {p.receita.ingredientes.map((ing, idx) => (
+                      <li key={idx}>{ing}</li>
+                    ))}
+                  </ul>
+
+                  <div className='mt-1'>
+                    <strong>Preparo:</strong>
+                  </div>
+                  <ul className='list-disc pl-5'>
+                    {p.receita.preparo.map((step, idx) => (
+                      <li key={idx}>{step}</li>
+                    ))}
+                  </ul>
+
+                  <div className='mt-1'>
+                    <strong>Aplicação:</strong>
+                  </div>
+                  <ul className='list-disc pl-5'>
+                    {p.receita.aplicacao.map((step, idx) => (
+                      <li key={idx}>{step}</li>
+                    ))}
+                  </ul>
+
+                  <div className='mt-1'>
+                    <strong>Tempo de ação:</strong> {p.receita.tempoAcao}
+                  </div>
+                  <div className='mt-1'>
+                    <strong>Necessita enxágue:</strong> {p.receita.tempoEnxague}
+                  </div>
+                  {p.receita.nota && (
+                    <div className='mt-1 text-gray-600'>
+                      <em>{p.receita.nota}</em>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>
