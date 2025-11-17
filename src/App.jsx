@@ -653,8 +653,8 @@ export default function FitossanitarioApp() {
                   ⚠️ Aviso importante para Lírios / Mini Phalaenopsis e Antúrio:
                 </p>
                 <p className='text-yellow-700'>
-                  Para essas espécies, é **fortemente recomendado preferir
-                  métodos físicos/mecânicos** de controle de pragas, como
+                  Para essas espécies, é <b>fortemente recomendado preferir
+                  métodos físicos/mecânicos</b> de controle de pragas, como
                   remoção manual dos insetos (com pano, algodão e cotonete
                   úmidos, por exemplo), lavagem das folhas e o uso de armadilhas
                   adesivas para insetos voadores.
