@@ -296,8 +296,6 @@ export default function FitossanitarioApp() {
 
   const { calendar, perPlantNeeded } = useMemo(() => generateSchedule({ year, monthIndex, selections }), [year, monthIndex, selections]);
   const { daysInMonth } = monthInfo(year, monthIndex);
-}
-
 
   // 🖨️ Função para imprimir só a tabela - corrigida para não fechar imediatamente
   function printTable() {
